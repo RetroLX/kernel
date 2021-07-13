@@ -1,6 +1,0 @@
-nds:
-  emulator: drastic
-  core:     drastic
-psp:
-  options:
-    frameskip: automatic

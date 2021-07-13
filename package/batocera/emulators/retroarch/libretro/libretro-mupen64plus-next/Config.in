@@ -1,6 +1,0 @@
-config BR2_PACKAGE_LIBRETRO_MUPEN64PLUS_NEXT
-	bool "libretro-mupen64plus-next"
-	depends on BR2_PACKAGE_RETROARCH
-
-	help
-	  A alternative libretro N64 emulator core

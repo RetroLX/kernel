@@ -1,6 +1,6 @@
 # Target definition
 BR2_aarch64=y
-BR2_cortex_a72_a53=y
+BR2_cortex_a73_a53=y
 BR2_ARM_FPU_NEON_FP_ARMV8=y
 
 # Toolchain definition
@@ -15,7 +15,7 @@ BR2_TOOLCHAIN_GLIBC_GCONV_LIBS_COPY=y
 BR2_TOOLCHAIN_BUILDROOT_CXX=y
 BR2_ENABLE_LOCALE_WHITELIST="C ar ca cy_GB de el es es_MX eu_ES fr hu it ja_JP ko nb_NO nl nn_NO oc_FR.UTF-8 pl pt_PT pt_BR ru_RU uk_UA sv_SE tr zh_CN zh_TW"
 BR2_GENERATE_LOCALE="en_US.UTF-8"
-BR2_TARGET_OPTIMIZATION="-pipe -fsigned-char -mcpu=cortex-a72.cortex-a53 -mtune=cortex-a72.cortex-a53"
+BR2_TARGET_OPTIMIZATION="-pipe -fsigned-char -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53"
 BR2_TARGET_GENERIC_HOSTNAME="batocera"
 BR2_TARGET_GENERIC_ISSUE="PLAY AGAIN"
 BR2_TARGET_ROOTFS_TAR_NONE=y
@@ -29,12 +29,12 @@ BR2_LINUX_KERNEL_CUSTOM_VERSION=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.49"
 BR2_KERNEL_HEADERS_5_10=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
-BR2_LINUX_KERNEL_INTREE_DTS_NAME="rockchip/rk3399-rockpro64 rockchip/rk3399-rock960 rockchip/rk3399-hugsun-x99"
+BR2_LINUX_KERNEL_INTREE_DTS_NAME="amlogic/meson-g12b-odroid-n2 amlogic/meson-g12b-odroid-n2-plus amlogic/meson-g12b-a311d-khadas-vim3"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/rockchip/rk3399/linux_patches"
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/rockchip/rk3399/linux-rk3399-defconfig.config"
-BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/rockchip/rk3399/linux-defconfig-fragment.config"
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux-meson64-current.config"
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux-meson64-current-fragment.config"
 
 # Required to build ??
 BR2_PACKAGE_UTIL_LINUX_LIBSMARTCOLS=y
