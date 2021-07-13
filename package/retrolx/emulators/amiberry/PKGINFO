@@ -1,6 +1,0 @@
-pkgname = amiberry
-pkgver = 4.1.4-1
-pkgdesc = Amiberry Amiga Emulator
-group = emulator
-packager = https://retrolx.org 
-url = http://amiberry.com

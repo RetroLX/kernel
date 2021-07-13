@@ -1,6 +1,0 @@
-pkgname = ppsspp
-pkgver = 1.11.3-1
-pkgdesc = Sony PSP emulator
-group = emulator
-packager = https://retrolx.org 
-url = https://www.ppsspp.org
