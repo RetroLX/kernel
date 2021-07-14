@@ -35,6 +35,7 @@ RUN dpkg --add-architecture i386 && \
 		locales \
 		graphviz \
 		python \
+		curl \
 		gcc-multilib \
 		g++-multilib \
 	&& apt-get clean \

@@ -7,119 +7,65 @@
 # BINARIES_DIR = images dir
 # TARGET_DIR = target dir
 
-##### constants ################
-BATOCERA_BINARIES_DIR="${BINARIES_DIR}/batocera"
-GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
-################################
 
-##### find images to build #####
-BATOCERA_TARGET=$(grep -E "^BR2_PACKAGE_BATOCERA_TARGET_[A-Z_0-9]*=y$" "${BR2_CONFIG}" | grep -vE "_ANY=" | sed -e s+'^BR2_PACKAGE_BATOCERA_TARGET_\([A-Z_0-9]*\)=y$'+'\1'+)
-BATOCERA_LOWER_TARGET=$(echo "${BATOCERA_TARGET}" | tr [A-Z] [a-z])
-BATOCERA_IMAGES_TARGETS=$(grep -E "^BR2_TARGET_BATOCERA_IMAGES[ ]*=[ ]*\".*\"[ ]*$" "${BR2_CONFIG}" | sed -e s+"^BR2_TARGET_BATOCERA_IMAGES[ ]*=[ ]*\"\(.*\)\"[ ]*$"+"\1"+)
-if test -z "${BATOCERA_IMAGES_TARGETS}"
-then
-    echo "no BR2_TARGET_BATOCERA_IMAGES defined." >&2
-    exit 1
+#!/usr/bin/env bash
+#
+# Author: Stefan Buck
+# https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447
+#
+#
+# This script accepts the following parameters:
+#
+# * owner
+# * repo
+# * tag
+# * filename
+# * github_api_token
+#
+# Script to upload a release asset using the GitHub API v3.
+#
+# Example:
+#
+# upload-github-release-asset.sh github_api_token=TOKEN owner=stefanbuck repo=playground tag=v0.1.0 filename=./build.zip
+#
+
+#BATOCERA_TARGET=$(grep -E "^BR2_PACKAGE_BATOCERA_TARGET_[A-Z_0-9]*=y$" "${BR2_CONFIG}" | sed -e s+'^BR2_PACKAGE_BATOCERA_TARGET_\([A-Z_0-9]*\)=y$'+'\1'+)
+BATOCERA_TARGET="s905"
+BR2_LINUX_KERNEL_VERSION=5.10.50
+
+# Check dependencies.
+set -e
+xargs=$(which gxargs || which xargs)
+
+# Validate settings.
+[ "$TRACE" ] && set -x
+
+# Define variables.
+GH_API="https://api.github.com"
+GH_REPO="$GH_API/repos/RetroLX/kernel"
+GH_TAGS="$GH_REPO/releases/tags/${BATOCERA_TARGET}-${BR2_LINUX_KERNEL_VERSION}"
+AUTH="Authorization: token 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"
+WGET_ARGS="--content-disposition --auth-no-challenge --no-cookie"
+CURL_ARGS="-LJO#"
+
+if [[ "$tag" == 'LATEST' ]]; then
+  GH_TAGS="$GH_REPO/releases/latest"
 fi
-################################
 
-#### common parent dir to al images #
-if echo "${BATOCERA_IMAGES_TARGETS}" | grep -qE '^[^ ]*$'
-then
-    # single board directory
-    IMGMODE=single
-else
-    # when there are several one, the first one is the common directory where to find the create-boot-script.sh directory
-    IMGMODE=multi
-fi
+# Validate token.
+curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
-#### clean the (previous if exists) target directory ###
-if test -d "${BATOCERA_BINARIES_DIR}"
-then
-    rm -rf "${BATOCERA_BINARIES_DIR}" || exit 1
-fi
-mkdir -p "${BATOCERA_BINARIES_DIR}/images" || exit 1
+# Read asset tags.
+response=$(curl -sH "$AUTH" $GH_TAGS)
 
-##### build images #############
-SUFFIXVERSION=$(cat "${TARGET_DIR}/usr/share/batocera/batocera.version" | sed -e s+'^\([0-9\.]*\).*$'+'\1'+) # xx.yy version
-SUFFIXDATE=$(date +%Y%m%d)
+# Get ID of the asset based on given filename.
+eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')
+[ "$id" ] || { echo "Error: Failed to get release id for tag: $tag"; echo "$response" | awk 'length($0)<100' >&2; exit 1; }
 
-#### build the images ###########
-for BATOCERA_PATHSUBTARGET in ${BATOCERA_IMAGES_TARGETS}
-do
-    BATOCERA_SUBTARGET=$(basename "${BATOCERA_PATHSUBTARGET}")
+# Upload asset
+echo "Uploading asset... $localAssetPath" >&2
 
-    #### prepare the boot dir ######
-    BOOTNAMEDDIR="${BATOCERA_BINARIES_DIR}/boot_${BATOCERA_SUBTARGET}"
-    rm -rf "${BOOTNAMEDDIR}" || exit 1 # remove in case or rerun
-    BATOCERA_POST_IMAGE_SCRIPT="${BR2_EXTERNAL_BATOCERA_PATH}/board/batocera/${BATOCERA_PATHSUBTARGET}/create-boot-script.sh"
-    bash "${BATOCERA_POST_IMAGE_SCRIPT}" "${HOST_DIR}" "${BR2_EXTERNAL_BATOCERA_PATH}/board/batocera/${BATOCERA_PATHSUBTARGET}" "${BUILD_DIR}" "${BINARIES_DIR}" "${TARGET_DIR}" "${BATOCERA_BINARIES_DIR}" || exit 1
-    # add some common files
-    if test -d "${BINARIES_DIR}/tools"
-    then
-        cp -pr "${BINARIES_DIR}/tools"              "${BATOCERA_BINARIES_DIR}/boot/" || exit 1
-    fi
-    cp     "${BINARIES_DIR}/batocera-boot.conf" "${BATOCERA_BINARIES_DIR}/boot/" || exit 1
-    echo   "${BATOCERA_SUBTARGET}" > "${BATOCERA_BINARIES_DIR}/boot/boot/batocera.board" || exit 1
+# Construct url
+GH_ASSET="https://uploads.github.com/repos/RetroLX/kernel/releases/$id/assets?name=kernel.tar.gz"
 
-    #### boot.tar.xz ###############
-    echo "creating images/${BATOCERA_SUBTARGET}/boot.tar.xz"
-    mkdir -p "${BATOCERA_BINARIES_DIR}/images/${BATOCERA_SUBTARGET}" || exit 1
-    (cd "${BATOCERA_BINARIES_DIR}/boot" && tar -I "xz -T0" -cf "${BATOCERA_BINARIES_DIR}/images/${BATOCERA_SUBTARGET}/boot.tar.xz" *) || exit 1
-    
-    # rename the squashfs : the .update is the version that will be renamed at boot to replace the old version
-    mv "${BATOCERA_BINARIES_DIR}/boot/boot/batocera.update" "${BATOCERA_BINARIES_DIR}/boot/boot/batocera" || exit 1
-
-    # create *.img
-    if test "${IMGMODE}" = "multi"
-    then
-	BATOCERAIMG="${BATOCERA_BINARIES_DIR}/images/${BATOCERA_SUBTARGET}/retrolx-${BATOCERA_LOWER_TARGET}-${BATOCERA_SUBTARGET}-${SUFFIXVERSION}-${SUFFIXDATE}.img"
-    else
-	BATOCERAIMG="${BATOCERA_BINARIES_DIR}/images/${BATOCERA_SUBTARGET}/retrolx-${BATOCERA_LOWER_TARGET}-${SUFFIXVERSION}-${SUFFIXDATE}.img"
-    fi
-    echo "creating images/${BATOCERA_SUBTARGET}/"$(basename "${BATOCERAIMG}")"..." >&2
-    rm -rf "${GENIMAGE_TMP}" || exit 1
-    GENIMAGEDIR="${BR2_EXTERNAL_BATOCERA_PATH}/board/batocera/${BATOCERA_PATHSUBTARGET}"
-    GENIMAGEFILE="${GENIMAGEDIR}/genimage.cfg"
-    FILES=$(find "${BATOCERA_BINARIES_DIR}/boot" -type f | sed -e s+"^${BATOCERA_BINARIES_DIR}/boot/\(.*\)$"+"file \1 \{ image = '\1' }"+ | tr '\n' '@')
-    cat "${GENIMAGEFILE}" | sed -e s+'@files'+"${FILES}"+ | tr '@' '\n' > "${BATOCERA_BINARIES_DIR}/genimage.cfg" || exit 1
-
-    # install syslinux
-    if grep -qE "^BR2_TARGET_SYSLINUX=y$" "${BR2_CONFIG}"
-    then
-	GENIMAGEBOOTFILE="${GENIMAGEDIR}/genimage-boot.cfg"
-	echo "installing syslinux" >&2
-	cat "${GENIMAGEBOOTFILE}" | sed -e s+'@files'+"${FILES}"+ | tr '@' '\n' > "${BATOCERA_BINARIES_DIR}/genimage-boot.cfg" || exit 1
-    genimage --rootpath="${TARGET_DIR}" --inputpath="${BATOCERA_BINARIES_DIR}/boot" --outputpath="${BATOCERA_BINARIES_DIR}" --config="${BATOCERA_BINARIES_DIR}/genimage-boot.cfg" --tmppath="${GENIMAGE_TMP}" || exit 1
-    "${HOST_DIR}/bin/syslinux" -i "${BATOCERA_BINARIES_DIR}/boot.vfat" -d "/boot/syslinux" || exit 1
-    # remove genimage temp path as sometimes genimage v14 fails to start
-    rm -rf ${GENIMAGE_TMP}
-    mkdir ${GENIMAGE_TMP}
-    fi
-    ###
-    "${HOST_DIR}/bin/genimage" --rootpath="${TARGET_DIR}" --inputpath="${BATOCERA_BINARIES_DIR}/boot" --outputpath="${BATOCERA_BINARIES_DIR}" --config="${BATOCERA_BINARIES_DIR}/genimage.cfg" --tmppath="${GENIMAGE_TMP}" || exit 1
- 
-    rm -f "${BATOCERA_BINARIES_DIR}/boot.vfat" || exit 1
-    rm -f "${BATOCERA_BINARIES_DIR}/userdata.ext4" || exit 1
-    mv "${BATOCERA_BINARIES_DIR}/batocera.img" "${BATOCERAIMG}" || exit 1
-    gzip "${BATOCERAIMG}" || exit 1
-
-    # rename the boot to boot_arch
-    mv "${BATOCERA_BINARIES_DIR}/boot" "${BOOTNAMEDDIR}" || exit 1
-
-    # copy the version file needed for version check
-    cp "${TARGET_DIR}/usr/share/batocera/batocera.version" "${BATOCERA_BINARIES_DIR}/images/${BATOCERA_SUBTARGET}" || exit 1
-done
-
-#### md5 #######################
-for FILE in "${BATOCERA_BINARIES_DIR}/images/"*"/boot.tar.xz" "${BATOCERA_BINARIES_DIR}/images/"*"/retrolx-"*".img.gz"
-do
-    echo "creating ${FILE}.md5"
-    CKS=$(md5sum "${FILE}" | sed -e s+'^\([^ ]*\) .*$'+'\1'+)
-    echo "${CKS}" > "${FILE}.md5"
-    echo "${CKS}  $(basename "${FILE}")" >> "${BATOCERA_BINARIES_DIR}/MD5SUMS"
-done
-
-#### update the target dir with some information files
-cp "${TARGET_DIR}/usr/share/batocera/batocera.version" "${BATOCERA_BINARIES_DIR}" || exit 1
-"${BR2_EXTERNAL_BATOCERA_PATH}"/scripts/linux/systemsReport.sh "${PWD}" "${BATOCERA_BINARIES_DIR}" || exit 1
+curl "$GITHUB_OAUTH_BASIC" --data-binary @"${BINARIES_DIR}/kernel.tar.gz" -H "Authorization: token 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" -H "Content-Type: application/octet-stream" $GH_ASSET
