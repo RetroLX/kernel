@@ -2958,7 +2958,7 @@ index 0000000..c1a2a6f
 +		}
 +	}
 +
-+	printk("AAA target_volt: %lu\n", target_volt);
++	printk("target_voltage: %lu\n", target_volt);
 +
 +	if (bus->cur_volt != target_volt) {
 +		if (regulator_set_voltage(bus->regulator, target_volt,
@@ -2980,8 +2980,8 @@ index 0000000..c1a2a6f
 +	struct rockchip_bus *bus = to_rockchip_bus_clk_nb(nb);
 +	int ret = 0;
 +
-+	printk("AAA event %lu, old_rate %lu, new_rate: %lu\n",
-+		event, ndata->old_rate, ndata->new_rate);
++	//printk("AAA event %lu, old_rate %lu, new_rate: %lu\n",
++	//	event, ndata->old_rate, ndata->new_rate);
 +
 +	switch (event) {
 +	case PRE_RATE_CHANGE:
@@ -3019,7 +3019,7 @@ index 0000000..c1a2a6f
 +	}
 +
 +	init_rate = clk_get_rate(bus->clk);
-+	printk("init rate %d", init_rate);
++	//printk("init rate %d", init_rate);
 +	ret = rockchip_bus_clkfreq_target(dev, init_rate);
 +	if (ret)
 +		return ret;
@@ -3060,7 +3060,7 @@ index 0000000..c1a2a6f
 +	bus->dev = dev;
 +	platform_set_drvdata(pdev, bus);
 +
-+	printk("asdfsadfsadffasdafsdhjfsdakasdfjfjasdklsfadkljsdfajklfsadjklfasdjklhasfdhjklafsdhkjsfdajkhfasdk");
++	//printk("asdfsadfsadffasdafsdhjfsdakasdfjfjasdklsfadkljsdfajklfsadjklfasdjklhasfdhjklafsdhkjsfdajkhfasdk");
 +	return rockchip_bus_clkfreq(bus);
 +}
 +
@@ -4351,7 +4351,7 @@ index 0000000..bb8c9c5
 +
 +static void rk817_bat_calib_vol(struct rk817_bat *battery)
 +{
-+	printk("rk817 calib vol");
++	//printk("rk817 calib vol");
 +	uint32_t vcalib0 = 0;
 +	uint32_t vcalib1 = 0;
 +	int ret;
@@ -4359,13 +4359,13 @@ index 0000000..bb8c9c5
 +	/* calibrate voltage */
 +	ret = rk817_get_reg_hl(battery, RK817_GAS_GAUGE_VCALIB0_H, RK817_GAS_GAUGE_VCALIB0_L, &vcalib0);
 +	if (ret)
-+		printk("AAAAAAAA");
++		;//printk("AAAAAAAA");
 +
 +	ret = rk817_get_reg_hl(battery, RK817_GAS_GAUGE_VCALIB1_H, RK817_GAS_GAUGE_VCALIB1_L, &vcalib1);
 +	if (ret)
-+		printk("AAAAAAAAAAAAAA");
++		;//printk("AAAAAAAAAAAAAA");
 +
-+	printk("0 %d 1 %d", vcalib0, vcalib1);
++	//printk("0 %d 1 %d", vcalib0, vcalib1);
 +	/* values were taken from BSP kernel */
 +	battery->voltage_k = (4025 - 2300) * 1000 / ((vcalib1 - vcalib0) ? (vcalib1 - vcalib0) : 1);
 +	battery->voltage_b = 4025 - (battery->voltage_k * vcalib1) / 1000;
@@ -4374,13 +4374,13 @@ index 0000000..bb8c9c5
 +
 +static void rk817_bat_calib_cur(struct rk817_bat *battery)
 +{
-+	printk("rk817 calib cur");
++	//printk("rk817 calib cur");
 +	uint32_t ioffset = 0;
 +	int ret;
 +	/* calibrate current */
 +	ret = rk817_get_reg_hl(battery, RK817_GAS_GAUGE_IOFFSET_H, RK817_GAS_GAUGE_IOFFSET_H, &ioffset);
 +	if (ret)
-+		printk("AAAAAAAAAAAAAAAAAAAAAAAAA");
++		;//printk("AAAAAAAAAAAAAAAAAAAAAAAAA");
 +	rk817_write_reg_hl(battery, RK817_GAS_GAUGE_CAL_OFFSET_H, RK817_GAS_GAUGE_CAL_OFFSET_L, ioffset);
 +}
 +
@@ -4393,7 +4393,7 @@ index 0000000..bb8c9c5
 +	int ret = 0;
 +	int reg = 0;
 +	struct rk808 *rk808 = battery->rk808;
-+	printk("rk817 bat get prop");
++	//printk("rk817 bat get prop");
 +
 +	/* recalibrate voltage and current readings if we need to */
 +	/* BSP does both on CUR_CALIB_UPD, ignoring VOL_CALIB_UPD */
@@ -5488,7 +5488,7 @@ index 0000000..4525082
 +	if (!data)
 +		return -ENOMEM;
 +
-+	printk("ASDFASDFFASDFASDAFSDSDFAFSADASDFAFSDASDFFASD DMC");
++	//printk("ASDFASDFFASDFASDAFSDSDFAFSADASDFAFSDASDFFASD DMC");
 +	mutex_init(&data->lock);
 +
 +	data->vdd_center = devm_regulator_get(dev, "center");
@@ -5848,7 +5848,7 @@ index 0000000..b42b69c
 +	if (!data)
 +		return -ENOMEM;
 +
-+	printk("asdfiuhfasdhsfadhjfasdhfasdjkfsadhjkfasdhjkfasdlk DFI");
++	//printk("asdfiuhfasdhsfadhjfasdhfasdjkfsadhjkfasdhjkfasdlk DFI");
 +	data->regs = devm_platform_ioremap_resource(pdev, 0);
 +	if (IS_ERR(data->regs))
 +		return PTR_ERR(data->regs);
