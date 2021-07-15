@@ -64,8 +64,6 @@ menu "Libraries"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/libglvnd/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/alsa-plugins/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/catch2/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/libraries/libxmp/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/wildmidi/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/appstream-glib/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/python3-pyparsing/Config.in"
 endmenu

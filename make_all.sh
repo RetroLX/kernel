@@ -13,6 +13,12 @@ source ./gh_token
 # Mainline kernels based on official version
 KERNEL_VERSION="5.10.50"
 
+# Allwinner kernels
+make kernel-h3-build
+make kernel-h5-build
+TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+
 # Amlogic kernels
 make kernel-s905-build
 make kernel-s912-build

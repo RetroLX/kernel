@@ -23,7 +23,7 @@ endif
 DOCKER_REPO := batoceralinux
 IMAGE_NAME  := batocera.linux-build
 
-TARGETS := $(sort $(shell find $(PROJECT_DIR)/configs/ -name 'b*' | sed -n 's/.*\/batocera-\(.*\)_defconfig/\1/p'))
+TARGETS := $(sort $(shell find $(PROJECT_DIR)/configs/ -name 'r*' | sed -n 's/.*\/retrolx-\(.*\)_defconfig/\1/p'))
 UID  := $(shell id -u)
 GID  := $(shell id -g)
 
@@ -84,9 +84,9 @@ dl-dir:
 		make O=/$* BR2_EXTERNAL=/build -C /build/buildroot clean
 
 %-config: batocera-docker-image output-dir-%
-	@cp -f $(PROJECT_DIR)/configs/batocera-$*_defconfig $(PROJECT_DIR)/configs/batocera-$*_defconfig-tmp
+	@cp -f $(PROJECT_DIR)/configs/retrolx-$*_defconfig $(PROJECT_DIR)/configs/retrolx-$*_defconfig-tmp
 	@for opt in $(EXTRA_OPTS); do \
-		echo $$opt >> $(PROJECT_DIR)/configs/batocera-$*_defconfig ; \
+		echo $$opt >> $(PROJECT_DIR)/configs/retrolx-$*_defconfig ; \
 	done
 	@docker run -t --init --rm \
 		-v $(PROJECT_DIR):/build \
@@ -97,8 +97,8 @@ dl-dir:
 		-u $(UID):$(GID) \
 		$(DOCKER_OPTS) \
 		$(DOCKER_REPO)/$(IMAGE_NAME) \
-		make O=/$* BR2_EXTERNAL=/build -C /build/buildroot batocera-$*_defconfig
-	@mv -f $(PROJECT_DIR)/configs/batocera-$*_defconfig-tmp $(PROJECT_DIR)/configs/batocera-$*_defconfig
+		make O=/$* BR2_EXTERNAL=/build -C /build/buildroot retrolx-$*_defconfig
+	@mv -f $(PROJECT_DIR)/configs/retrolx-$*_defconfig-tmp $(PROJECT_DIR)/configs/retrolx-$*_defconfig
 
 %-build: batocera-docker-image %-config ccache-dir dl-dir
 	@docker run -t --init --rm \
@@ -174,9 +174,9 @@ dl-dir:
 	@$(MAKE) $*-build CMD=$(PKG)
 
 %-webserver: output-dir-%
-	$(if $(wildcard $(OUTPUT_DIR)/$*/images/batocera/*),,$(error "$* not built!"))
+	$(if $(wildcard $(OUTPUT_DIR)/$*/images/retrolx/*),,$(error "$* not built!"))
 	$(if $(shell which python 2>/dev/null),,$(error "python not found!"))
-	@python3 -m http.server --directory $(OUTPUT_DIR)/$*/images/batocera/images/$*/
+	@python3 -m http.server --directory $(OUTPUT_DIR)/$*/images/retrolx/images/$*/
 
 %-rsync: output-dir-%
 	$(eval TMP := $(call UC, $*)_IP)
@@ -200,7 +200,7 @@ dl-dir:
 
 %-flash: %-supported
 	$(if $(DEV),,$(error "DEV not specified!"))
-	@gzip -dc $(OUTPUT_DIR)/$*/images/batocera/images/$*/batocera-*.img.gz | sudo dd of=$(DEV) bs=5M status=progress
+	@gzip -dc $(OUTPUT_DIR)/$*/images/retrolx/images/$*/retrolx-*.img.gz | sudo dd of=$(DEV) bs=5M status=progress
 	@sync
 
 %-upgrade: %-supported
@@ -208,8 +208,8 @@ dl-dir:
 	-@sudo umount /tmp/mount
 	-@mkdir /tmp/mount
 	@sudo mount $(DEV)1 /tmp/mount
-	-@sudo rm /tmp/mount/boot/batocera
-	@sudo tar xvf $(OUTPUT_DIR)/$*/images/batocera/boot.tar.xz -C /tmp/mount --no-same-owner
+	-@sudo rm /tmp/mount/boot/retrolx
+	@sudo tar xvf $(OUTPUT_DIR)/$*/images/retrolx/boot.tar.xz -C /tmp/mount --no-same-owner
 	@sudo umount /tmp/mount
 	-@rmdir /tmp/mount
 
