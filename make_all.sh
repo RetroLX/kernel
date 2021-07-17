@@ -3,12 +3,12 @@
 # Source secret GitHub token
 source ./gh_token
 
-#KERNEL_VERSION=$(date '+%Y-%m-%d')
+KERNEL_VERSION=$(date '+%Y-%m-%d')
 
 # Custom kernels based on current date
-#make kernel-s812-build
+make kernel-s812-build
 #make kernel-h616-build
-#TARGET=s812 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+TARGET=s812 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
 KERNEL_VERSION="5.10.50"
