@@ -62,6 +62,6 @@ eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:al
 echo "Uploading asset... $localAssetPath" >&2
 
 # Construct url
-GH_ASSET="https://uploads.github.com/repos/RetroLX/kernel/releases/$id/assets?name=kernel.tar.gz"
+GH_ASSET="https://uploads.github.com/repos/RetroLX/kernel/releases/$id/assets?name=kernel-${TARGET}-${VERSION}.tar.gz"
 
 curl "$GITHUB_OAUTH_BASIC" --data-binary @"output/kernel-${TARGET}/images/kernel.tar.gz" -H "Authorization: token $GH_TOKEN" -H "Content-Type: application/octet-stream" $GH_ASSET
