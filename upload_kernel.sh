@@ -51,6 +51,9 @@ fi
 # Validate token.
 curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
+# Create release
+curl -i -X POST -H "Content-Type:application/json" -H "Authorization: token $GH_TOKEN" $GH_REPO/releases -d "{\"tag_name\":\"${TARGET}-${VERSION}\",\"name\": \"${TARGET}-${VERSION}\",\"body\": \"\",\"draft\": false,\"prerelease\": false}"
+
 # Read asset tags.
 response=$(curl -sH "$AUTH" $GH_TAGS)
 
