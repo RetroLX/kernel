@@ -11,30 +11,30 @@ KERNEL_VERSION=$(date '+%Y-%m-%d')
 #TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.51"
+KERNEL_VERSION="5.10.52"
 
 # Allwinner kernels
-make kernel-h3-build
-make kernel-h5-build
-TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+#make kernel-h3-build
+#TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+#make kernel-h5-build
+#TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Amlogic kernels
 make kernel-s905-build
-make kernel-s912-build
-make kernel-s922x-build
-make kernel-sm1-build
 TARGET=s905  VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-s912-build
 TARGET=s912  VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-s922x-build
 TARGET=s922x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-sm1-build
 TARGET=sm1   VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Rockchip kernels
 make kernel-rk3288-build
-make kernel-rk3326-build
-make kernel-rk3399-build
 TARGET=rk3288 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-rk3326-build
 TARGET=rk3326 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-rk3399-build
 TARGET=rk3399 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Samsung kernels
