@@ -22,10 +22,10 @@ index 37f307cfa4cc..4013f16bb368 100644
 +	status = "okay";
 +};
 +
-+&usbdrd_dwc3 {
++/*&usbdrd_dwc3 {
 +	dr_mode = "host";
 +	status = "okay";
-+};
++};*/
 +
 +&usb3phy {
 +	status = "okay";
@@ -54,10 +54,10 @@ index c984662043da..89fde87f7650 100644
 +	status = "okay";
 +};
 +
-+&usbdrd_dwc3 {
++/*&usbdrd_dwc3 {
 +	dr_mode = "host";
 +	status = "okay";
-+};
++};*/
 +
 +&usb3phy {
 +	status = "okay";
