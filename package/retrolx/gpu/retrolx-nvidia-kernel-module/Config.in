@@ -1,0 +1,13 @@
+config BR2_PACKAGE_RETROLX_NVIDIA_KERNEL_MODULE
+	bool "retrolx-nvidia-kernel-module"
+	depends on BR2_LINUX_KERNEL
+	depends on BR2_x86_64
+	select BR2_LINUX_NEEDS_MODULES # not using kernel-module infra
+	help
+	  Build the nvidia.ko kernel module.
+
+	  If CUDA support (above) is set, and the target is x86_64, then
+	  this will also build the nvidia-uvm.ko kernel module, which
+	  provides Unified Memory access to the GPU and CPU memories for
+	  CUDA programs.
+
