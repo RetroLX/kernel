@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RTL8723DS_VERSION = f3167881f4668da0fb7f3d5c90746ff64e1c6633
+RTL8723DS_VERSION = 1b6ddd544b4a829ed2b7feb32575359b6443cd3d
 RTL8723DS_SITE = $(call github,lwfinger,rtl8723ds,$(RTL8723DS_VERSION))
 RTL8723DS_LICENSE = GPL-2.0
 RTL8723DS_LICENSE_FILES = LICENSE
