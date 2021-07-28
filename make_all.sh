@@ -11,7 +11,7 @@ KERNEL_VERSION=$(date '+%Y-%m-%d')
 #TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.52"
+KERNEL_VERSION="5.10.54"
 
 # Allwinner kernels
 #make kernel-h3-build
