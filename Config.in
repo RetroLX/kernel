@@ -32,8 +32,6 @@ menu "Utils"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/gpicase/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/rpigpioswitch/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/roshambo-case/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/cabextract/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/xow/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/wii-u-gc-adapter/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/evmapy/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/utils/evmapy-system-config/Config.in"
@@ -41,14 +39,9 @@ menu "Utils"
 endmenu
 
 menu "Libraries"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/libcapsimage/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/libenet/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/python-autobreadcrumbs/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/python-evdev/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/libglvnd/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/alsa-plugins/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/catch2/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/appstream-glib/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/python3-pyparsing/Config.in"
 endmenu
 
