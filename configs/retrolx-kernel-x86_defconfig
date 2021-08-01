@@ -1,8 +1,8 @@
-# Target definition (Intel i868 aka Pentium Pro)
+# Target definition (Intel i686 aka Pentium Pro)
 BR2_x86_i686=y
 
 # Toolchain definition
-BR2_GCC_VERSION_10_X=y
+BR2_GCC_VERSION_11_X=y
 BR2_GCC_ENABLE_GRAPHITE=y
 BR2_GCC_ENABLE_LTO=y
 BR2_OPTIMIZE_3=y
@@ -18,9 +18,6 @@ BR2_TARGET_GENERIC_ISSUE="PLAY AGAIN"
 BR2_TARGET_ROOTFS_TAR_NONE=y
 BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_EUDEV=y
 BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scripts/package-kernel-modules.sh"
-
-# GCC10 kernel 5.12+ hack
-BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/patches"
 
 # Kernel
 BR2_LINUX_KERNEL=y
