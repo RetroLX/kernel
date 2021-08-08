@@ -177,7 +177,7 @@
 	};
 
 	panel@0 {
-		compatible = "elida,kd35t133", "simple-panel-dsi";
+		compatible = "leadtek,ltk035c5444t", "simple-panel-dsi";
 		reg = <0>;
 
 		/* pwm1 backlight */
