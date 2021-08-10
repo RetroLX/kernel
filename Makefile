@@ -101,7 +101,7 @@ dl-dir:
 	@mv -f $(PROJECT_DIR)/configs/retrolx-$*_defconfig-tmp $(PROJECT_DIR)/configs/retrolx-$*_defconfig
 
 %-build: batocera-docker-image %-config ccache-dir dl-dir
-	@docker run -t --init --rm \
+	@docker run --init --rm \
 		-v $(PROJECT_DIR):/build \
 		-v $(DL_DIR):/build/buildroot/dl \
 		-v $(OUTPUT_DIR)/$*:/$* \
