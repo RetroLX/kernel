@@ -16,9 +16,9 @@ ifdef PARALLEL_BUILD
 	MAKE_OPTS  += -j$(MAKE_JLEVEL)
 endif
 
-ifndef BATCH_MODE
-	DOCKER_OPTS += -i
-endif
+#ifndef BATCH_MODE
+#	DOCKER_OPTS += -i
+#endif
 
 DOCKER_REPO := batoceralinux
 IMAGE_NAME  := batocera.linux-build
