@@ -27,47 +27,47 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-    - task: Kernel_H3@3
+    - task: Bash@3
       displayName: Build Allwinner H3 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-h3-build'
-    - task: Kernel_H5@3
+    - task: Bash@3
       displayName: Build Allwinner H5 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-h5-build'
-    - task: Kernel_S905@3
+    - task: Bash@3
       displayName: Build Amlogic S905 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-s905-build'
-    - task: Kernel_S912@3
+    - task: Bash@3
       displayName: Build Amlogic S912 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-s912-build'
-    - task: Kernel_S922X@3
+    - task: Bash@3
       displayName: Build Amlogic S922X kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-s922x-build'
-    - task: Kernel_SM1@3
+    - task: Bash@3
       displayName: Build Amlogic SM1 (S905x3) kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-sm1-build'
-    - task: Kernel_RK3288@3
+    - task: Bash@3
       displayName: Build Rockchip RK3288 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-rk3288-build'
-    - task: Kernel_RK3326@3
+    - task: Bash@3
       displayName: Build Rockchip RK3326 kernel
       inputs:
         targetType: 'inline'
         script: 'make kernel-rk3326-build'
-    - task: Kernel_RK3399@3
+    - task: Bash@3
       displayName: Build Rockchip RK3399 kernel
       inputs:
         targetType: 'inline'
