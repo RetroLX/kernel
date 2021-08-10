@@ -28,47 +28,47 @@ stages:
         tags: |
           $(tag)
     - task: Kernel_H3@3
+      displayName: Build Allwinner H3 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-h3-build'
-        displayName: Build Allwinner H3 kernel
     - task: Kernel_H5@3
+      displayName: Build Allwinner H5 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-h5-build'
-        displayName: Build Allwinner H5 kernel
     - task: Kernel_S905@3
+      displayName: Build Amlogic S905 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-s905-build'
-        displayName: Build Amlogic S905 kernel
     - task: Kernel_S912@3
+      displayName: Build Amlogic S912 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-s912-build'
-        displayName: Build Amlogic S912 kernel
     - task: Kernel_S922X@3
+      displayName: Build Amlogic S922X kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-s922x-build'
-        displayName: Build Amlogic S922X kernel
     - task: Kernel_SM1@3
+      displayName: Build Amlogic SM1 (S905x3) kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-sm1-build'
-        displayName: Build Amlogic SM1 (S905x3) kernel
     - task: Kernel_RK3288@3
+      displayName: Build Rockchip RK3288 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-rk3288-build'
-        displayName: Build Rockchip RK3288 kernel
     - task: Kernel_RK3326@3
+      displayName: Build Rockchip RK3326 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-rk3326-build'
-        displayName: Build Rockchip RK3326 kernel
     - task: Kernel_RK3399@3
+      displayName: Build Rockchip RK3399 kernel
       inputs:
         targetType: 'inline'
 	script: 'make kernel-rk3399-build'
-        displayName: Build Rockchip RK3399 kernel
