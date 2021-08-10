@@ -27,21 +27,21 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-    - bash: make h3-build
+    - bash: make kernel-h3-build
       displayName: Build Allwinner H3 kernel
-    - bash: make h5-build
+    - bash: make kernel-h5-build
       displayName: Build Allwinner H5 kernel
-    - bash: make s905-build
+    - bash: make kernel-s905-build
       displayName: Build Amlogic S905 kernel
-    - bash: make s912-build
+    - bash: make kernel-s912-build
       displayName: Build Amlogic S912 kernel
-    - bash: make sm1-build
+    - bash: make kernel-sm1-build
       displayName: Build Amlogic SM1 (S905x3) kernel
-    - bash: make s922x-build
+    - bash: make kernel-s922x-build
       displayName: Build Amlogic S922X kernel
-    - bash: make rk3288-build
+    - bash: make kernel-rk3288-build
       displayName: Build Rockchip RK3288 kernel
-    - bash: make rk3326-build
+    - bash: make kernel-rk3326-build
       displayName: Build Rockchip RK3326 kernel
-    - bash: make rk3399-build
+    - bash: make kernel-rk3399-build
       displayName: Build Rockchip RK3399 kernel
