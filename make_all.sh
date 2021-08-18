@@ -11,7 +11,7 @@ make kernel-h616-build
 TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.58"
+KERNEL_VERSION="5.10.60"
 
 # Allwinner kernels
 make kernel-h3-build
@@ -42,7 +42,7 @@ make kernel-exynos5422-build
 TARGET=exynos5422 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Generic x86/x86_64 kernels
-KERNEL_VERSION="5.13.10"
+KERNEL_VERSION="5.13.12"
 make kernel-x86-build
 TARGET=x86 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-x86_64-build
