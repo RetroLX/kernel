@@ -18,6 +18,8 @@ make kernel-h3-build
 TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-h5-build
 TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-h6-build
+TARGET=h6 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Amlogic kernels
 make kernel-s905-build
