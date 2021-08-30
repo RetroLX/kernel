@@ -14,6 +14,8 @@ TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 KERNEL_VERSION="5.10.60"
 
 # Allwinner kernels
+make kernel-a20-build
+TARGET=a20 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-h3-build
 TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-h5-build
