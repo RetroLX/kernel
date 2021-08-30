@@ -29,13 +29,13 @@ vars:
 	@echo "Make options:       $(MAKE_OPTS)"
 
 output-dir-%: %-supported
-	@mkdir -p $(OUTPUT_DIR)/$*
+	mkdir -p $(OUTPUT_DIR)/$*
 
 ccache-dir:
-	@mkdir -p $(CCACHE_DIR)
+	mkdir -p $(CCACHE_DIR)
 
 dl-dir:
-	@mkdir -p $(DL_DIR)
+	mkdir -p $(DL_DIR)
 
 %-supported:
 	$(if $(findstring $*, $(TARGETS)),,$(error "$* not supported!"))
