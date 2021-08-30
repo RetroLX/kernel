@@ -33,10 +33,20 @@ stages:
         targetType: 'inline'
         script: 'cd $(Build.SourcesDirectory)'
     - task: Bash@3
+      displayName: Build Allwinner H3 kernel
+      inputs:
+        targetType: 'inline'
+        script: 'cd $(Build.SourcesDirectory) && make kernel-h3-build'
+    - task: Bash@3
       displayName: Build Allwinner H5 kernel
       inputs:
         targetType: 'inline'
         script: 'cd $(Build.SourcesDirectory) && make kernel-h5-build'
+    - task: Bash@3
+      displayName: Build Allwinner H6 kernel
+      inputs:
+        targetType: 'inline'
+        script: 'cd $(Build.SourcesDirectory) && make kernel-h6-build'
     - task: Bash@3
       displayName: Build Amlogic S905 kernel
       inputs:
