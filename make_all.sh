@@ -11,7 +11,7 @@ make kernel-h616-build
 TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.60"
+KERNEL_VERSION="5.10.61"
 
 # Allwinner kernels
 make kernel-a20-build
@@ -53,7 +53,7 @@ make kernel-x86_64-build
 TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry kernels based on official version
-KERNEL_VERSION="5.10.52"
+KERNEL_VERSION="5.10.60"
 
 # Raspberry Pi kernels
 make kernel-rpi1-build
