@@ -53,7 +53,7 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.61"
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.62"
 BR2_KERNEL_HEADERS_5_10=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="sun7i-a20-bananapi-m1-plus sun7i-a20-bananapi sun7i-a20-bananapro sun7i-a20-cubieboard2 sun7i-a20-cubietruck sun7i-a20-hummingbird sun7i-a20-i12-tvbox sun7i-a20-icnova-swac sun7i-a20-itead-ibox sun7i-a20-lamobo-r1 sun7i-a20-linutronix-testbox-v2 sun7i-a20-m3 sun7i-a20-mk808c sun7i-a20-olimex-som-evb-emmc sun7i-a20-olimex-som-evb sun7i-a20-olimex-som204-evb-emmc sun7i-a20-olimex-som204-evb sun7i-a20-olinuxino-lime-emmc sun7i-a20-olinuxino-lime sun7i-a20-olinuxino-lime2-emmc sun7i-a20-olinuxino-lime2 sun7i-a20-olinuxino-micro-emmc sun7i-a20-olinuxino-micro sun7i-a20-orangepi-mini sun7i-a20-orangepi sun7i-a20-pcduino3-nano sun7i-a20-pcduino3 sun7i-a20-wexler-tab7200 sun7i-a20-wits-pro-a20-dkt"
