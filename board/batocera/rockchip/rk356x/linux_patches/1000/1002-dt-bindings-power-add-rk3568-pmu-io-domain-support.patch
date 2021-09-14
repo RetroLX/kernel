@@ -1,0 +1,68 @@
+From: Michael Riesch <michael.riesch@wolfvision.net>
+Subject: [PATCH v2 2/7] dt-bindings: power: add rk3568-pmu-io-domain support
+Date: Wed,  4 Aug 2021 15:06:20 +0200
+Content-Type: text/plain; charset="utf-8"
+
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+[add soc-specific section]
+Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+---
+ .../bindings/power/rockchip-io-domain.yaml    | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml b/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
+index 121bec56b2b0..1727bf108979 100644
+--- a/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
++++ b/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
+@@ -55,6 +55,7 @@ properties:
+       - rockchip,rk3368-pmu-io-voltage-domain
+       - rockchip,rk3399-io-voltage-domain
+       - rockchip,rk3399-pmu-io-voltage-domain
++      - rockchip,rk3568-pmu-io-voltage-domain
+       - rockchip,rv1108-io-voltage-domain
+       - rockchip,rv1108-pmu-io-voltage-domain
+ 
+@@ -74,6 +75,7 @@ allOf:
+   - $ref: "#/$defs/rk3368-pmu"
+   - $ref: "#/$defs/rk3399"
+   - $ref: "#/$defs/rk3399-pmu"
++  - $ref: "#/$defs/rk3568-pmu"
+   - $ref: "#/$defs/rv1108"
+   - $ref: "#/$defs/rv1108-pmu"
+ 
+@@ -282,6 +284,34 @@ $defs:
+         pmu1830-supply:
+           description: The supply connected to PMUIO2_VDD.
+ 
++  rk3568-pmu:
++    if:
++      properties:
++        compatible:
++          contains:
++            const: rockchip,rk3568-pmu-io-voltage-domain
++
++    then:
++      properties:
++        pmuio1-supply:
++          description: The supply connected to PMUIO1.
++        pmuio2-supply:
++          description: The supply connected to PMUIO2.
++        vccio1-supply:
++          description: The supply connected to VCCIO1.
++        vccio2-supply:
++          description: The supply connected to VCCIO2.
++        vccio3-supply:
++          description: The supply connected to VCCIO3.
++        vccio4-supply:
++          description: The supply connected to VCCIO4.
++        vccio5-supply:
++          description: The supply connected to VCCIO5.
++        vccio6-supply:
++          description: The supply connected to VCCIO6.
++        vccio7-supply:
++          description: The supply connected to VCCIO7.
++
+   rv1108:
+     if:
+       properties:
+

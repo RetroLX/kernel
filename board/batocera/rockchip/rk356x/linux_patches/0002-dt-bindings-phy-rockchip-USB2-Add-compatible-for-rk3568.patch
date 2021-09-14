@@ -1,0 +1,26 @@
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH 2/4] dt-bindings: phy: rockchip: USB2: Add compatible for
+ rk3568
+Date: Mon, 14 Jun 2021 17:43:57 +0200
+Content-Type: text/plain; charset="utf-8"
+
+Add "rockchip,rk3568-usb2phy" in compatible list of the USB2 phy.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+---
+ .../devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml          | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+index b14387a48f6a3..a1420d5e44be7 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+@@ -18,6 +18,7 @@ properties:
+       - rockchip,rk3366-usb2phy
+       - rockchip,rk3399-usb2phy
+       - rockchip,rv1108-usb2phy
++      - rockchip,rk3568-usb2phy
+ 
+   reg:
+     maxItems: 1
+

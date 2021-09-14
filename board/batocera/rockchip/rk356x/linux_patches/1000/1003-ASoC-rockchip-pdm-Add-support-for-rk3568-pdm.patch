@@ -1,0 +1,32 @@
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH v4 3/7] ASoC: rockchip: pdm: Add support for rk3568 pdm
+Date: Fri,  3 Sep 2021 21:23:26 +0800
+Content-Type: text/plain; charset="utf-8"
+
+This patch adds compatible for rk3568 which is the same
+with rv1126.
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+---
+
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ sound/soc/rockchip/rockchip_pdm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+index 67634d1..f2bf023 100644
+--- a/sound/soc/rockchip/rockchip_pdm.c
++++ b/sound/soc/rockchip/rockchip_pdm.c
+@@ -531,6 +531,8 @@ static const struct of_device_id rockchip_pdm_match[] __maybe_unused = {
+ 	  .data = (void *)RK_PDM_RK3308 },
+ 	{ .compatible = "rockchip,rk3308-pdm",
+ 	  .data = (void *)RK_PDM_RK3308 },
++	{ .compatible = "rockchip,rk3568-pdm",
++	  .data = (void *)RK_PDM_RV1126 },
+ 	{ .compatible = "rockchip,rv1126-pdm",
+ 	  .data = (void *)RK_PDM_RV1126 },
+ 	{},
+
