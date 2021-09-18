@@ -53,7 +53,7 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.65"
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.67"
 BR2_KERNEL_HEADERS_5_10=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="amlogic/meson-gxm-khadas-vim2 amlogic/meson-gxm-nexbox-a1 amlogic/meson-gxm-q200 amlogic/meson-gxm-q201 amlogic/meson-gxm-rbox-pro amlogic/meson-gxm-s912-libretech-pc amlogic/meson-gxm-vega-s96"
