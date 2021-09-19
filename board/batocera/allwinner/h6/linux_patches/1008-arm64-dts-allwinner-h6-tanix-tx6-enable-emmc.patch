@@ -23,7 +23,7 @@ Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 +		regulator-max-microvolt = <1800000>;
 +	};
 +
- 	reg_vcc3v3: vcc3v3 {
+ 	reg_vcc3v3: regulator-vcc3v3 {
  		compatible = "regulator-fixed";
  		regulator-name = "vcc3v3";
 @@ -91,6 +98,15 @@
