@@ -53,7 +53,7 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.67"
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.69"
 BR2_KERNEL_HEADERS_5_10=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="allwinner/sun50i-h5-bananapi-m2-plus-v1.2 allwinner/sun50i-h5-bananapi-m2-plus allwinner/sun50i-h5-emlid-neutis-n5-devboard allwinner/sun50i-h5-libretech-all-h3-cc allwinner/sun50i-h5-libretech-all-h3-it allwinner/sun50i-h5-libretech-all-h5-cc allwinner/sun50i-h5-nanopi-neo-plus2 allwinner/sun50i-h5-nanopi-neo2 allwinner/sun50i-h5-orangepi-pc2 allwinner/sun50i-h5-orangepi-prime allwinner/sun50i-h5-orangepi-zero-plus allwinner/sun50i-h5-orangepi-zero-plus2"
