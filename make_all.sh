@@ -18,10 +18,8 @@ KERNEL_VERSION="5.10.69"
 # Allwinner kernels
 make kernel-aw32-build
 TARGET=aw32 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h5-build
-TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h6-build
-TARGET=h6 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-sun50i-build
+TARGET=sun50i VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Amlogic kernels
 make kernel-meson64-build
