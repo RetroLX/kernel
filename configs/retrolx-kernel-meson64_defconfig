@@ -1,7 +1,7 @@
 # Target definition
-BR2_arm=y
-BR2_cortex_a7=y
-BR2_ARM_FPU_NEON_VFPV4=y
+BR2_aarch64=y
+BR2_cortex_a53=y
+BR2_ARM_FPU_NEON_FP_ARMV8=y
 
 # Toolchain definition
 BR2_TOOLCHAIN=y
@@ -13,8 +13,8 @@ BR2_TOOLCHAIN_EXTERNAL_GLIBC=y
 BR2_PACKAGE_HAS_TOOLCHAIN_EXTERNAL=y
 BR2_PACKAGE_PROVIDES_TOOLCHAIN_EXTERNAL="toolchain-external-bootlin"
 BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_ARCH_SUPPORTS=y
-# BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_ARMV7_EABIHF_GLIBC_BLEEDING_EDGE is not set
-BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_ARMV7_EABIHF_GLIBC_STABLE=y
+# BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_AARCH64_GLIBC_BLEEDING_EDGE is not set
+BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_AARCH64_GLIBC_STABLE=y
 BR2_PACKAGE_HOST_GDB_ARCH_SUPPORTS=y
 BR2_TOOLCHAIN_SUPPORTS_ALWAYS_LOCKFREE_ATOMIC_INTS=y
 BR2_TOOLCHAIN_SUPPORTS_VARIADIC_MI_THUNK=y
@@ -43,7 +43,7 @@ BR2_ENABLE_LOCALE=y
 BR2_INSTALL_LIBSTDCPP=y
 BR2_ENABLE_LOCALE_WHITELIST="C ar ca cy_GB de el es es_MX eu_ES fr hu it ja_JP ko nb_NO nl nn_NO oc_FR.UTF-8 pl pt_PT pt_BR ru_RU uk_UA sv_SE tr zh_CN zh_TW"
 BR2_GENERATE_LOCALE="en_US.UTF-8"
-BR2_TARGET_OPTIMIZATION="-pipe -fsigned-char"
+BR2_TARGET_OPTIMIZATION="-pipe -fsigned-char -mcpu=cortex-a53 -mtune=cortex-a53"
 BR2_TARGET_GENERIC_HOSTNAME="RetroLX"
 BR2_TARGET_GENERIC_ISSUE="Back to the Retro"
 BR2_TARGET_ROOTFS_TAR_NONE=y
@@ -53,15 +53,15 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.67"
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.69"
 BR2_KERNEL_HEADERS_5_10=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
-BR2_LINUX_KERNEL_INTREE_DTS_NAME="sun8i-h3-bananapi-m2-plus-v1.2 sun8i-h3-bananapi-m2-plus sun8i-h3-beelink-x2 sun8i-h3-emlid-neutis-n5h3-devboard sun8i-h3-mapleboard-mp130 sun8i-h3-nanopi-m1-plus sun8i-h3-nanopi-m1 sun8i-h3-libretech-all-h3-cc sun8i-h3-orangepi-pc sun8i-h3-orangepi-pc-plus sun8i-h3-orangepi-2 sun8i-h3-orangepi-lite sun8i-h3-orangepi-one sun8i-h3-orangepi-plus sun8i-h3-orangepi-plus2e sun8i-h3-orangepi-zero-plus2"
+BR2_LINUX_KERNEL_INTREE_DTS_NAME="amlogic/meson-gxbb-nanopi-k2 amlogic/meson-gxbb-odroidc2 amlogic/meson-gxbb-p200 amlogic/meson-gxbb-nexbox-a95x amlogic/meson-gxl-s905x-p212 amlogic/meson-gxl-s905d-p231 amlogic/meson-gxl-s905d-p230 amlogic/meson-gxl-s905w-tx3-mini amlogic/meson-gxl-s905x-p212 amlogic/meson-gxl-s905x-hwacom-amazetv amlogic/meson-gxl-s905x-khadas-vim amlogic/meson-gxl-s905x-libretech-cc-v2 amlogic/meson-gxl-s905x-libretech-cc amlogic/meson-gxl-s905x-nexbox-a95x amlogic/meson-gxl-s905w-p281 amlogic/meson-g12a-sei510 amlogic/meson-g12a-tanix-tx5max amlogic/meson-g12a-u200 amlogic/meson-g12a-x96-max amlogic/meson-gxm-khadas-vim2 amlogic/meson-gxm-nexbox-a1 amlogic/meson-gxm-q200 amlogic/meson-gxm-q201 amlogic/meson-gxm-rbox-pro amlogic/meson-gxm-s912-libretech-pc amlogic/meson-gxm-vega-s96"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/h3/linux-defconfig.config"
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/h3/linux_patches"
-BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/h3/linux-defconfig-fragment.config"
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux-meson64-current.config"
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux-meson64-current-fragment.config"
 
 # Required to build ??
 BR2_PACKAGE_UTIL_LINUX_LIBSMARTCOLS=y
@@ -71,15 +71,11 @@ BR2_PACKAGE_UTIL_LINUX_LIBMOUNT=y
 # Build as zstd squashfs
 BR2_PACKAGE_HOST_SQUASHFS=y
 
-# spi flash support
-BR2_PACKAGE_MTD=y
-
 # Out-of-tree kernel modules
 BR2_PACKAGE_RTL8821AU=y
 BR2_PACKAGE_RTL8192EU=y
-# does not build BR2_PACKAGE_RTL8821CE=n
+BR2_PACKAGE_RTL8821CE=y
 BR2_PACKAGE_RTL8723DS=y
-BR2_PACKAGE_RTL8189FS=y
 
 # Enables ccache
 BR2_CCACHE=y
