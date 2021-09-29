@@ -16,26 +16,18 @@ TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 KERNEL_VERSION="5.10.69"
 
 # Allwinner kernels
-make kernel-a20-build
-TARGET=a20 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h3-build
-TARGET=h3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h5-build
-TARGET=h5 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h6-build
-TARGET=h6 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-aw32-build
+TARGET=aw32 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-sun50i-build
+TARGET=sun50i VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Amlogic kernels
-make kernel-s905-build
-TARGET=s905     VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-s905gen2-build
-TARGET=s905gen2 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-meson64-build
+TARGET=meson64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-s905gen3-build
 TARGET=s905gen3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-s912-build
-TARGET=s912     VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-s922x-build
-TARGET=s922x    VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+TARGET=s922x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Rockchip kernels
 make kernel-rk3288-build
