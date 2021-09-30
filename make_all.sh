@@ -13,7 +13,7 @@ make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.69"
+KERNEL_VERSION="5.10.70"
 
 # Allwinner kernels
 make kernel-aw32-build
