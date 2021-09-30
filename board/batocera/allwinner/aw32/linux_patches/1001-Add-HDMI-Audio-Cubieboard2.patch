@@ -1,0 +1,55 @@
+diff -u -r kernel-rk3326/build/linux-5.10.69/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts kernel-aw32/build/linux-5.10.69/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts	2021-09-26 14:09:02.000000000 +0200
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts	2021-09-30 08:53:13.028407510 +0200
+@@ -130,6 +130,14 @@
+ 	};
+ };
+ 
++&i2s2 {
++	status = "okay";
++};
++
++&sound_hdmi {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff -u -r kernel-rk3326/build/linux-5.10.69/arch/arm/boot/dts/sun7i-a20.dtsi kernel-aw32/build/linux-5.10.69/arch/arm/boot/dts/sun7i-a20.dtsi
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi	2021-09-26 14:09:02.000000000 +0200
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi	2021-09-30 08:52:46.087935526 +0200
+@@ -649,6 +649,7 @@
+ 		};
+ 
+ 		hdmi: hdmi@1c16000 {
++			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun7i-a20-hdmi",
+ 				     "allwinner,sun5i-a10s-hdmi";
+ 			reg = <0x01c16000 0x1000>;
+@@ -689,6 +690,25 @@
+ 			};
+ 		};
+ 
++		sound_hdmi: sound {
++		        compatible = "simple-audio-card";
++		        simple-audio-card,format = "i2s";
++		        simple-audio-card,name = "allwinner-hdmi";
++		        simple-audio-card,mclk-fs = <128>;
++		        simple-audio-card,frame-inversion;
++			status = "disabled";
++
++		        simple-audio-card,codec {
++		                sound-dai = <&hdmi>;
++		        };
++
++		        simple-audio-card,cpu {
++				sound-dai = <&i2s2>;
++				dai-tdm-slot-num = <2>;
++				dai-tdm-slot-width = <32>;
++			};
++		};
++
+ 		spi2: spi@1c17000 {
+ 			compatible = "allwinner,sun4i-a10-spi";
+ 			reg = <0x01c17000 0x1000>;
