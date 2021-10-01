@@ -34,6 +34,8 @@ make kernel-rk3288-build
 TARGET=rk3288 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rk3326-build
 TARGET=rk3326 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-rk3328-build
+TARGET=rk3328 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rk3399-build
 TARGET=rk3399 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
@@ -42,7 +44,7 @@ make kernel-exynos5422-build
 TARGET=exynos5422 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Generic x86/x86_64 kernels
-KERNEL_VERSION="5.13.12"
+KERNEL_VERSION="5.14.9"
 make kernel-x86-build
 TARGET=x86 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-x86_64-build
