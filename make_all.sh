@@ -51,7 +51,7 @@ make kernel-x86_64-build
 TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry kernels based on official version
-KERNEL_VERSION="5.10.60"
+KERNEL_VERSION="5.10.63"
 
 # Raspberry Pi kernels
 make kernel-rpi1-build
