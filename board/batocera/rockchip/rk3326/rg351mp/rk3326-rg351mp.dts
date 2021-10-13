@@ -305,29 +305,6 @@
 		default-brightness-level = <80>; /* default 50% */
 	};
 
-	rk817-sound {
-		compatible = "simple-audio-card";
-		simple-audio-card,format = "i2s";
-		simple-audio-card,name = "rockchip,rk817-codec";
-		simple-audio-card,mclk-fs = <256>;
-		simple-audio-card,widgets =
-			"Microphone", "Mic Jack",
-			"Headphone", "Headphone Jack";
-		simple-audio-card,routing =
-			"MIC_IN", "Mic Jack",
-			/*"IN1P", "Mic Jack",*/
-			"Headphone Jack", "HPOL",
-			"Headphone Jack", "HPOR";
-		simple-audio-card,hp-det-gpio = <&gpio2 RK_PC6 GPIO_ACTIVE_LOW>;
-		simple-audio-card,codec-hp-det = <1>;
-		simple-audio-card,cpu {
-			sound-dai = <&i2s1_2ch>;
-		};
-		simple-audio-card,codec {
-			sound-dai = <&rk817_codec>;
-		};
-	};
-
 	vccsys: vccsys {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v8_sys";
@@ -336,10 +313,43 @@
 		regulator-max-microvolt = <3800000>;
 	};
 
-};
+        rk817-sound {
+                compatible = "simple-audio-card";
+                simple-audio-card,name = "Analog";
+                simple-audio-card,format = "i2s";
+                simple-audio-card,mclk-fs = <256>;
+                simple-audio-card,widgets =
+                        "Microphone", "Mic Jack",
+                        "Headphone", "Headphones",
+                        "Speaker", "Speaker";
+                simple-audio-card,routing =
+                        "MICL", "Mic Jack",
+                        "Headphones", "HPOL",
+                        "Headphones", "HPOR",
+                        "Speaker", "SPKO";
+                simple-audio-card,hp-det-gpio = <&gpio2 RK_PC6 GPIO_ACTIVE_LOW>;
+                simple-audio-card,cpu {
+                        sound-dai = <&i2s1_2ch>;
+                };
 
-&dmc {
-	center-supply = <&vdd_logic>;
+                simple-audio-card,codec {
+                        sound-dai = <&rk817>;
+                };
+        };
+
+
+	vcc_host: vcc_host {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_host";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+
+		gpio = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-always-on;
+		vin-supply = <&vccsys>;
+	};
+
 };
 
 &cpu0 {
@@ -391,7 +401,7 @@
 	};
 
 	panel@0 {
-		compatible = "elida,kd35t133", "simple-panel-dsi";
+		compatible = "leadtek,ltk035c5444t";
 		reg = <0>;
 
 		/* pwm1 backlight */
@@ -400,26 +410,16 @@
 		backlight-supply = <&vcc_backlight>;
 		/* RK817 LDO8 */
 		power-supply = <&vcc_lcd>;
+		vcc-supply = <&vcc_lcd>;
+		iovcc-supply = <&vcc_lcd>;
 
 		/* Rev 0.2 LCD reset gpio GPIO3.C0 */
 		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
-
-		prepare-delay-ms = <2>;
-		reset-delay-ms = <1>;
-		init-delay-ms = <20>;
-		enable-delay-ms = <120>;
-		disable-delay-ms = <50>;
-		unprepare-delay-ms = <20>;
+		rotation = <0>;
 
 		/* LCD size */
 		width-mm = <52>;
 		height-mm = <70>;
-
-		port {
-			mipi_in_panel: endpoint {
-				remote-endpoint = <&mipi_out_panel>;
-			};
-		};
 
 		/*dsi,flags = <(MIPI_DSI_MODE_VIDEO           |
 			      MIPI_DSI_MODE_VIDEO_BURST     |
@@ -682,6 +682,12 @@
 				pixelclk-active = <0>;
 			};
 		};*/
+
+		port {
+			mipi_in_panel: endpoint {
+				remote-endpoint = <&mipi_out_panel>;
+			};
+		};
 	};
 };
 
@@ -717,16 +723,17 @@
 	status = "disabled";
 };
 
+
 &gpu {
 	mali-supply = <&vdd_logic>;
 	status = "okay";
 };
 
 &i2c0 {
-	status = "okay";
 	clock-frequency = <400000>;
-	i2c-scl-rising-time-ns = <280>;
 	i2c-scl-falling-time-ns = <16>;
+	i2c-scl-rising-time-ns = <280>;
+	status = "okay";
 
 	rk817: pmic@20 {
 		compatible = "rockchip,rk817";
@@ -743,6 +750,9 @@
 		wakeup-source;
 		#clock-cells = <1>;
 		clock-output-names = "rk808-clkout1", "rk808-clkout2";
+                clocks = <&cru SCLK_I2S1_OUT>;
+                #sound-dai-cells = <0>;
+                clock-names = "mclk";
 		//fb-inner-reg-idxs = <2>;
 
 		/* 1: rst regs (default in codes), 0: rst the pmic */
@@ -757,6 +767,10 @@
 		vcc7-supply = <&vccsys>;
 		vcc8-supply = <&vccsys>;
 		vcc9-supply = <&dcdc_boost>;
+
+                rk817_codec: codec {
+                        rockchip,mic-in-differential;
+                };
 
 		pwrkey {
 			status = "okay";
@@ -1025,17 +1039,6 @@
 			extcon = <&u2phy>;
 		};
 
-		rk817_codec: codec {
-			#sound-dai-cells = <0>;
-			compatible = "rockchip,rk817-codec";
-			clocks = <&cru SCLK_I2S1_OUT>;
-			clock-names = "mclk";
-			pinctrl-names = "default";
-			pinctrl-0 = <&i2s1_2ch_mclk>;
-			hp-volume = <20>;
-			spk-volume = <3>;
-			status = "okay";
-		};
 	};
 };
 
@@ -1053,7 +1056,6 @@
 /* I2S 1 Channel Used */
 &i2s1_2ch {
 	status = "okay";
-	#sound-dai-cells = <0>;
 };
 
 &io_domains {
@@ -1180,36 +1182,6 @@
 };
 
 &pinctrl {
-	pmic {
-		/* ODROID-GO2 : PMIC_INT(GPIO0.PB2) */
-		pmic_int: pmic_int {
-			rockchip,pins =
-				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>,
-				<0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		/* ODROID-GO2 : PMIC_SLEEP(GPIO0.PA4) */
-		soc_slppin_gpio: soc_slppin_gpio {
-			rockchip,pins =
-				<0 RK_PA4 RK_FUNC_GPIO &pcfg_output_low>;
-		};
-
-		soc_slppin_slp: soc_slppin_slp {
-			rockchip,pins =
-				<0 RK_PA4 1 &pcfg_pull_none>;
-		};
-
-		soc_slppin_rst: soc_slppin_rst {
-			rockchip,pins =
-				<0 RK_PA4 2 &pcfg_pull_none>;
-		};
-	};
-
-	leds {
-		led_pins: led-pins {
-			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-	};
 	btns {
 		btn_pins: btn-pins {
 			rockchip,pins = <1 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>,
@@ -1235,9 +1207,37 @@
 					<3 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	};
+	leds {
+		led_pins: led-pins {
+			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+	pmic {
+		/* ODROID-GO2 : PMIC_INT(GPIO0.PB2) */
+		pmic_int: pmic_int {
+			rockchip,pins =
+				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>,
+				<0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		/* ODROID-GO2 : PMIC_SLEEP(GPIO0.PA4) */
+		soc_slppin_gpio: soc_slppin_gpio {
+			rockchip,pins =
+				<0 RK_PA4 RK_FUNC_GPIO &pcfg_output_low>;
+		};
+
+		soc_slppin_slp: soc_slppin_slp {
+			rockchip,pins =
+				<0 RK_PA4 1 &pcfg_pull_none>;
+		};
+
+		soc_slppin_rst: soc_slppin_rst {
+			rockchip,pins =
+				<0 RK_PA4 2 &pcfg_pull_none>;
+		};
+	};
 };
 
 /* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
 /* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
 /* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
-
