@@ -13,7 +13,7 @@ make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.72"
+KERNEL_VERSION="5.10.73"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -44,7 +44,7 @@ make kernel-exynos5422-build
 TARGET=exynos5422 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Generic x86/x86_64 kernels
-KERNEL_VERSION="5.14.9"
+KERNEL_VERSION="5.14.12"
 make kernel-x86-build
 TARGET=x86 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-x86_64-build
