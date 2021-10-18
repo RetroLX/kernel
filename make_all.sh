@@ -13,7 +13,7 @@ make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.73"
+KERNEL_VERSION="5.10.74"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -51,7 +51,7 @@ make kernel-x86_64-build
 TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry kernels based on official version
-KERNEL_VERSION="5.10.63"
+KERNEL_VERSION="5.10.71"
 
 # Raspberry Pi kernels
 make kernel-rpi1-build
