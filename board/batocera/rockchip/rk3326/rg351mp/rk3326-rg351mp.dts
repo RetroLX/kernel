@@ -39,9 +39,11 @@
 
 	joypad {
 		compatible = "gpio-keys-adc";
+		pwms = <&pwm0 0 200000000 0>;		 
+		pwm-names = "rumble_pwm";
 		pinctrl-names = "default";
 		pinctrl-0 = <&btn_pins>;
-
+		pinctrl-1 = <&pwm0_pin>;
 		io-channels = <&adcmux 0>, <&adcmux 1>, <&adcmux 2>, <&adcmux 3>;
 
 		axis@0 {
