@@ -39,6 +39,10 @@
 
 	joypad {
 		compatible = "gpio-keys-adc";
+		joypad-name = "RG351MP Gamepad";
+		joypad-product = <0x1100>;
+		joypad-revision = <0x0100>;
+
 		pwms = <&pwm0 0 200000000 0>;		 
 		pwm-names = "rumble_pwm";
 		pinctrl-names = "default";
@@ -237,7 +241,7 @@
 		#mux-control-cells = <0>;
 
 		mux-gpios = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>,
-			    <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
+					<&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
 		mux-en-gpio = <&gpio3 RK_PB5 GPIO_ACTIVE_LOW>;
 	};
 
@@ -296,14 +300,11 @@
 			simple-audio-card,mclk-fs = <256>;
 			simple-audio-card,widgets =
 					"Microphone", "Mic Jack",
-					"Headphone", "Headphones",
-					"Speaker", "Speaker";
+					"Headphone", "Headphones";
 			simple-audio-card,routing =
 					"MICL", "Mic Jack",
 					"Headphones", "HPOL",
-					"Headphones", "HPOR",
-					"Speaker", "SPKO";
-			simple-audio-card,hp-det-gpio = <&gpio2 RK_PC6 GPIO_ACTIVE_LOW>;
+					"Headphones", "HPOR";
 			simple-audio-card,cpu {
 					sound-dai = <&i2s1_2ch>;
 			};

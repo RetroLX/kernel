@@ -17,6 +17,15 @@
                 bootargs = "";
 	};
 
+	rumble {
+		compatible = "pwm-vibrator";
+		pwms = <&pwm0 0 200000000 0>;		 
+		pwm-names = "enable";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&pwm0_pin>;
+	};
+	
 	fiq-debugger {
 		compatible = "rockchip,fiq-debugger";
 		rockchip,serial-id = <2>;
