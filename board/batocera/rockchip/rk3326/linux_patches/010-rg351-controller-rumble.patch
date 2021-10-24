@@ -27,7 +27,7 @@ new file mode 100644
 index 0000000..ee8dc1f
 --- /dev/null
 +++ b/drivers/input/joystick/adc-gpio.c
-@@ -0,0 +1,255 @@
+@@ -0,0 +1,260 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (C) 2021, Anonymous
@@ -229,6 +229,8 @@ index 0000000..ee8dc1f
 +	struct device *dev = &pdev->dev;
 +	struct adc_joystick_polled *joy;
 +	struct input_dev *input;
++	u32 joypad_revision = 0;
++	u32 joypad_product = 0;
 +	int err;
 +
 +	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
@@ -248,9 +250,12 @@ index 0000000..ee8dc1f
 +		return -ENOMEM;
 +
 +	joy->input = input;
-+
-+	input->name = pdev->name;
++	device_property_read_string(dev, "joypad-name", &input->name);
++	device_property_read_u32(dev, "joypad-revision", &joypad_revision);
++	device_property_read_u32(dev, "joypad-product", &joypad_product);
 +	input->id.bustype = BUS_HOST;
++	input->id.product = (u16)joypad_product;
++	input->id.version = (u16)joypad_revision;
 +
 +	input_setup_polling(input, adc_joystick_polled_poll);
 +	input_set_poll_interval(input, 10);
