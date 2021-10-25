@@ -89,6 +89,10 @@
 
 	joypad {
 		compatible = "gpio-keys-adc";
+		joypad-name = "GO-Super Gamepad";
+		joypad-product = <0x1100>;
+		joypad-revision = <0x0100>;
+		
 		pinctrl-names = "default";
 		pinctrl-0 = <&btn_pins>;
 

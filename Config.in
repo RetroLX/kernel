@@ -11,6 +11,7 @@ menu "System"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/rtl8821ce/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/rtl8192eu/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/rtl8723ds/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/esp8089/Config.in"
   endmenu
 
   menu "Device trees"
