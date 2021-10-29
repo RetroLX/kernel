@@ -89,6 +89,10 @@
 
 	joypad {
 		compatible = "gpio-keys-adc";
+		joypad-name = "GO-Super Gamepad";
+		joypad-product = <0x1100>;
+		joypad-revision = <0x0100>;
+		
 		pinctrl-names = "default";
 		pinctrl-0 = <&btn_pins>;
 
@@ -399,6 +403,7 @@
 		interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pmic_int &i2s1_2ch_mclk>;
+		rockchip,system-power-controller;
 		wakeup-source;
 		#clock-cells = <1>;
 		clock-output-names = "rk808-clkout1", "xin32k";
