@@ -25,14 +25,3 @@ index 6e569cd1d548..d1f72102c574 100644
  
  	pinctrl-0 = <&eth_rgmii_pins>;
  	pinctrl-names = "default";
-@@ -276,9 +269,7 @@ &gpio {
- 			  "NAND_CS1", "INAND_RST", "NAND_NR/B",
- 			  "NAND_ALE", "SPI_O", "NAND_NWE", "NAND_NRE",
- 			  "NAND_DQS", "INAND_CMD", "INAND_CLK",
--			  "SPI_CS",
--			  /* Bank DIF */
--			  "", "", "", "", "", "", "", "", "", "";
-+			  "SPI_CS";
- 
- 	/*
- 	 * WARNING: The USB Hub on the WeTek core needs a reset signal

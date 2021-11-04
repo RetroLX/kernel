@@ -1,0 +1,38 @@
+From 43782ae04cd592188a9754ea006728c0d64e27f1 Mon Sep 17 00:00:00 2001
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 14 Jul 2021 22:56:44 +0200
+Subject: [PATCH 112/122] arm64: dts: meson: fix X96-Air
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../boot/dts/amlogic/meson-sm1-x96-air-1000.dts    | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-1000.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-1000.dts
+index 8047c6b116fe..72db47dddc3b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-1000.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-1000.dts
+@@ -120,6 +120,20 @@ &ir {
+ 	linux,rc-map-name = "rc-x96max";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr104;
++	max-frequency = <200000000>;
++
++	rtl8822cs: sdio-wifi@1 {
++		reg = <1>;
++	};
++};
++
++&sd_emmc_b {
++	/* CRC errors are observed at 50MHz */
++	max-frequency = <35000000>;
++};
++
+ &tdmif_b {
+ 	status = "okay";
+ };
+-- 
+2.25.1
+
