@@ -1,0 +1,62 @@
+From 3ec159431ea82ce756871399a31662158b13d452 Mon Sep 17 00:00:00 2001
+From: Christian Hewitt <christianshewitt@gmail.com>
+Date: Thu, 16 Sep 2021 12:57:18 +0000
+Subject: [PATCH 64/64] HACK: arm64: dts: amlogic: support cs4334 headphone DAC
+ on WP2
+
+No idea if this works :)
+
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+index 6eae692792ec..5ce17562a58e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+@@ -14,6 +14,11 @@
+ 	compatible = "wetek,play2", "amlogic,meson-gxbb";
+ 	model = "WeTek Play 2";
+ 
++	stereo_i2s_codec: i2s-audio-codec {
++		compatible = "cirrus,cs4334";
++		#sound-dai-cells = <0>;
++	};
++
+ 	spdif_dit: audio-codec-0 {
+ 		#sound-dai-cells = <0>;
+ 		compatible = "linux,spdif-dit";
+@@ -51,6 +56,7 @@
+ 	sound {
+ 		compatible = "amlogic,gx-sound-card";
+ 		model = "WETEK-PLAY2";
++
+ 		assigned-clocks = <&clkc CLKID_MPLL0>,
+ 				  <&clkc CLKID_MPLL1>,
+ 				  <&clkc CLKID_MPLL2>;
+@@ -76,6 +82,10 @@
+ 			codec-0 {
+ 				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
+ 			};
++
++			codec-1 {
++				sound-dai = <&stereo_i2s_codec>;
++			};
+ 		};
+ 
+ 		dai-link-3 {
+@@ -100,6 +110,10 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&spdif_out_y_pins>;
+ 	pinctrl-names = "default";
++
++	pinctrl-0 = <&i2s_am_clk_pins>, <&i2s_out_ao_clk_pins>,
++		    <&i2s_out_lr_clk_pins>, <&i2s_out_ch01_ao_pins>,
++		    <&spdif_out_y_pins>;
+ };
+ 
+ &i2c_A {
+-- 
+2.17.1
+

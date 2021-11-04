@@ -1,0 +1,43 @@
+From 65930ada6de1c85faedaba4134d954103e382a8b Mon Sep 17 00:00:00 2001
+From: Dongjin Kim <tobetter@gmail.com>
+Date: Thu, 26 Aug 2021 11:05:04 +0000
+Subject: [PATCH 12/64] FROMGIT: arm64: dts: meson: sm1: add Ethernet PHY reset
+ line for ODROID-C4/HC4
+
+This patch is to fix an issue that the ethernet link doesn't come up
+when using ip link set down/up:
+
+   [   11.428114] meson8b-dwmac ff3f0000.ethernet eth0: Link is Down
+   [   14.428595] meson8b-dwmac ff3f0000.ethernet eth0: PHY [0.0:00] driver [RTL8211F Gigabit Ethernet] (irq=31)
+   [   14.428610] meson8b-dwmac ff3f0000.ethernet: Failed to reset the dma
+   [   14.428974] meson8b-dwmac ff3f0000.ethernet eth0: stmmac_hw_setup: DMA engine initialization failed
+   [   14.711185] meson8b-dwmac ff3f0000.ethernet eth0: stmmac_open: Hw setup failed
+
+This fix has been referred two commits applied for ODROID-N2 (G12B) [0][1]
+
+[0] commit 658e4129bb81 ("arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line")
+[1] commit 1c7412530d5d ("arm64: dts: meson: g12b: odroid-n2: fix PHY deassert timing requirements")
+
+Signed-off-by: Dongjin Kim <tobetter@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+index fd0ad85c165b..45e7fcb062f9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+@@ -263,6 +263,10 @@
+ 		reg = <0>;
+ 		max-speed = <1000>;
+ 
++		reset-assert-us = <10000>;
++		reset-deassert-us = <80000>;
++		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
++
+ 		interrupt-parent = <&gpio_intc>;
+ 		/* MAC_INTR on GPIOZ_14 */
+ 		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
+-- 
+2.17.1
+
