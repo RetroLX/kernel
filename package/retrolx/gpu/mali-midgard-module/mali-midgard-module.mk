@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MALI_MIDGARD_MODULE_VERSION = 2815552cc83e928d3ca3811f18e2c60d8c9eba0d
+MALI_MIDGARD_MODULE_VERSION = 055a54556037dce5036cd7470eb9c877c0147f0b
 MALI_MIDGARD_MODULE_SITE = $(call github,LibreELEC,mali-midgard,$(MALI_MIDGARD_MODULE_VERSION))
 
 MALI_MIDGARD_MODULE_MODULE_MAKE_OPTS = \

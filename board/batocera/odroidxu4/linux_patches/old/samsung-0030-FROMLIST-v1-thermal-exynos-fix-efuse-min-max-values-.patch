@@ -1,0 +1,41 @@
+From 62e49925afba697d8edc1fa308216c4c2d35cd2b Mon Sep 17 00:00:00 2001
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Fri, 27 Aug 2021 16:51:25 +0000
+Subject: [PATCH 30/32] FROMLIST(v1): thermal: exynos: fix efuse min/max values
+ for exynos5422
+
+The e-fuse min~max range values described in the exynos5422 user manual
+are 16~76. If e-fuse values are out of this range, the thermal sensor
+may not sense thermal data properly.
+
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ drivers/thermal/samsung/exynos_tmu.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index e9a90bc23b11..bcfd5990cd03 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -929,11 +929,13 @@ static int exynos_map_dt_data(struct platform_device *pdev)
+ 		data->reference_voltage = 16;
+ 		data->efuse_value = 55;
+ 		if (data->soc != SOC_ARCH_EXYNOS5420 &&
+-		    data->soc != SOC_ARCH_EXYNOS5420_TRIMINFO)
++		    data->soc != SOC_ARCH_EXYNOS5420_TRIMINFO) {
++			data->min_efuse_value = 16;
++			data->max_efuse_value = 76;
++		} else {
+ 			data->min_efuse_value = 40;
+-		else
+-			data->min_efuse_value = 0;
+-		data->max_efuse_value = 100;
++			data->max_efuse_value = 100;
++		}
+ 		break;
+ 	case SOC_ARCH_EXYNOS5433:
+ 		data->tmu_set_trip_temp = exynos5433_tmu_set_trip_temp;
+-- 
+2.17.1
+

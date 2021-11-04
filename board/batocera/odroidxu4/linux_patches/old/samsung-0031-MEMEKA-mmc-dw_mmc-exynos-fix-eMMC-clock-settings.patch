@@ -1,0 +1,48 @@
+From 3baa31cb1a8e0a20f1f1920c0512067ce1b6a934 Mon Sep 17 00:00:00 2001
+From: Marian Mihailescu <mihailescu2m@gmail.com>
+Date: Thu, 14 Nov 2019 12:19:37 +1030
+Subject: [PATCH 31/32] MEMEKA: mmc: dw_mmc: exynos: fix eMMC clock settings
+
+Before:
+
+[    3.227837] mmc0: tuning execution failed: -5
+[    3.231229] mmc0: error -5 whilst initialising MMC card
+[    3.536450] mmc0: tuning execution failed: -5
+[    3.539680] mmc0: error -5 whilst initialising MMC card
+[    3.794056] mmc0: tuning execution failed: -5
+[    3.794212] mmc0: error -5 whilst initialising MMC card
+[    4.111097] mmc0: tuning execution failed: -5
+[    4.115356] mmc0: error -5 whilst initialising MMC card
+[    4.426164] mmc0: tuning execution failed: -5
+[    4.429678] mmc0: error -5 whilst initialising MMC card
+[    4.756226] mmc0: tuning execution failed: -5
+[    4.760641] mmc0: error -5 whilst initialising MMC card
+
+After:
+
+[    3.305461] mmc0: new HS400 MMC card at address 0001
+[    3.307444] mmcblk0: mmc0:0001 8GME4R 7.28 GiB
+[    3.308132] mmcblk0boot0: mmc0:0001 8GME4R 4.00 MiB
+[    3.309172] mmcblk0boot1: mmc0:0001 8GME4R 4.00 MiB
+[    3.310255] mmcblk0rpmb: mmc0:0001 8GME4R 512 KiB, chardev (246:0)
+[    3.315963]  mmcblk0: p1 p2
+---
+ drivers/mmc/host/dw_mmc-exynos.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/dw_mmc-exynos.h b/drivers/mmc/host/dw_mmc-exynos.h
+index 0280d394a32a..7088e39de5d2 100644
+--- a/drivers/mmc/host/dw_mmc-exynos.h
++++ b/drivers/mmc/host/dw_mmc-exynos.h
+@@ -61,7 +61,7 @@
+ /* Fixed clock divider */
+ #define EXYNOS4210_FIXED_CIU_CLK_DIV	2
+ #define EXYNOS4412_FIXED_CIU_CLK_DIV	4
+-#define HS400_FIXED_CIU_CLK_DIV		1
++#define HS400_FIXED_CIU_CLK_DIV		2
+ 
+ /* Minimal required clock frequency for cclkin, unit: HZ */
+ #define EXYNOS_CCLKIN_MIN	50000000
+-- 
+2.17.1
+

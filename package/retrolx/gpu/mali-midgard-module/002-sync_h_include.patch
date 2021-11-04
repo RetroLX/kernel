@@ -1,0 +1,10 @@
+--- a/driver/product/kernel/drivers/gpu/arm/midgard/mali_kbase_sync.h	2021-11-04 17:50:10.110393296 +0100
++++ b/driver/product/kernel/drivers/gpu/arm/midgard/mali_kbase_sync.h	2021-11-04 18:17:44.948619448 +0100
+@@ -32,6 +32,7 @@
+ #define MALI_KBASE_SYNC_H
+ 
+ #include <linux/syscalls.h>
++#include <linux/fdtable.h>
+ #ifdef CONFIG_SYNC
+ #include <sync.h>
+ #endif
