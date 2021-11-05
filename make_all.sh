@@ -5,23 +5,23 @@ source ./gh_token
 
 # Custom kernels based on current date
 KERNEL_VERSION=$(date '+%Y-%m-%d')
-make kernel-s812-build
-TARGET=s812 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-make kernel-h616-build
-TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.10.76"
+KERNEL_VERSION="5.15-test"
 
 # Allwinner kernels
 make kernel-aw32-build
 TARGET=aw32 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-sun50i-build
 TARGET=sun50i VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-h616-build
+TARGET=h616 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Amlogic kernels
+make kernel-s812-build
+TARGET=s812 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-meson64-build
 TARGET=meson64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-s905gen3-build
