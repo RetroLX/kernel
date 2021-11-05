@@ -53,13 +53,13 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.76"
-BR2_KERNEL_HEADERS_5_10=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.15"
+BR2_KERNEL_HEADERS_5_15=y
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/aw32/linux-defconfig.config"
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="sun7i-a20-bananapi-m1-plus sun7i-a20-bananapi sun7i-a20-bananapro sun7i-a20-cubieboard2 sun7i-a20-cubietruck sun7i-a20-hummingbird sun7i-a20-i12-tvbox sun7i-a20-icnova-swac sun7i-a20-itead-ibox sun7i-a20-lamobo-r1 sun7i-a20-linutronix-testbox-v2 sun7i-a20-m3 sun7i-a20-mk808c sun7i-a20-olimex-som-evb-emmc sun7i-a20-olimex-som-evb sun7i-a20-olimex-som204-evb-emmc sun7i-a20-olimex-som204-evb sun7i-a20-olinuxino-lime-emmc sun7i-a20-olinuxino-lime sun7i-a20-olinuxino-lime2-emmc sun7i-a20-olinuxino-lime2 sun7i-a20-olinuxino-micro-emmc sun7i-a20-olinuxino-micro sun7i-a20-orangepi-mini sun7i-a20-orangepi sun7i-a20-pcduino3-nano sun7i-a20-pcduino3 sun7i-a20-wexler-tab7200 sun7i-a20-wits-pro-a20-dkt sun8i-h3-bananapi-m2-plus-v1.2 sun8i-h3-bananapi-m2-plus sun8i-h3-beelink-x2 sun8i-h3-emlid-neutis-n5h3-devboard sun8i-h3-mapleboard-mp130 sun8i-h3-nanopi-m1-plus sun8i-h3-nanopi-m1 sun8i-h3-libretech-all-h3-cc sun8i-h3-orangepi-pc sun8i-h3-orangepi-pc-plus sun8i-h3-orangepi-2 sun8i-h3-orangepi-lite sun8i-h3-orangepi-one sun8i-h3-orangepi-plus sun8i-h3-orangepi-plus2e sun8i-h3-orangepi-zero-plus2"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/aw32/linux-defconfig.config"
 BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/aw32/linux_patches"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/aw32/linux-defconfig-fragment.config"
 
@@ -75,11 +75,11 @@ BR2_PACKAGE_HOST_SQUASHFS=y
 BR2_PACKAGE_MTD=y
 
 # Out-of-tree kernel modules
-BR2_PACKAGE_RTL8821AU=y
-BR2_PACKAGE_RTL8192EU=y
+# KO on 5.15 BR2_PACKAGE_RTL8821AU=y
+# KO on 5.15 BR2_PACKAGE_RTL8192EU=y
 # does not build BR2_PACKAGE_RTL8821CE=n
-BR2_PACKAGE_RTL8723DS=y
-BR2_PACKAGE_RTL8189FS=y
+# KO on 5.15 BR2_PACKAGE_RTL8723DS=y
+# KO on 5.15 BR2_PACKAGE_RTL8189FS=y
 
 # Enables ccache
 BR2_CCACHE=y
