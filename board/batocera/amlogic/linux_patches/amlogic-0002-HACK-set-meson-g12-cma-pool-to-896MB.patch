@@ -1,7 +1,7 @@
-From a3ba44907ebf972d8e05213964ca0eb51703c652 Mon Sep 17 00:00:00 2001
+From 71e641a321f575e59711329e60c517080f97001b Mon Sep 17 00:00:00 2001
 From: chewitt <github@chrishewitt.net>
 Date: Wed, 14 Aug 2019 19:58:14 +0000
-Subject: [PATCH 02/64] HACK: set meson-g12 cma pool to 896MB
+Subject: [PATCH 02/61] HACK: set meson-g12 cma pool to 896MB
 
 This change sets the CMA pool to a larger 896MB! value for vdec use
 

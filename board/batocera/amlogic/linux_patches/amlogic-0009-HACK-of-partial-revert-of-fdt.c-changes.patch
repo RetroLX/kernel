@@ -1,7 +1,7 @@
-From ab45496b20a5a92150a8c242449471ae86511ad5 Mon Sep 17 00:00:00 2001
+From 81dce28cfc5399161898a0939e68526207ce3797 Mon Sep 17 00:00:00 2001
 From: Stefan Agner <stefan@agner.ch>
 Date: Wed, 15 Sep 2021 05:00:45 +0000
-Subject: [PATCH 09/64] HACK: of: partial revert of fdt.c changes
+Subject: [PATCH 09/61] HACK: of: partial revert of fdt.c changes
 
 This resolves reports similar to the below which are present in dmesg
 since Linux 5.10; which are also causing crashes in some distros:
