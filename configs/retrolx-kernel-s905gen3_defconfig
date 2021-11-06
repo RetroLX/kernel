@@ -53,10 +53,10 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scrip
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.10.76"
-BR2_KERNEL_HEADERS_5_10=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="5.15"
+BR2_KERNEL_HEADERS_5_15=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
-BR2_LINUX_KERNEL_INTREE_DTS_NAME="amlogic/meson-sm1-odroid-c4 amlogic/meson-sm1-khadas-vim3l amlogic/meson-sm1-h96-max amlogic/meson-sm1-sei610 amlogic/meson-sm1-x96-air-2g amlogic/meson-sm1-x96-air-4g amlogic/meson-sm1-a95xf3-air-2g amlogic/meson-sm1-a95xf3-air-4g"
+BR2_LINUX_KERNEL_INTREE_DTS_NAME="amlogic/meson-sm1-odroid-c4 amlogic/meson-sm1-khadas-vim3l amlogic/meson-sm1-h96-max amlogic/meson-sm1-sei610 amlogic/meson-sm1-x96-air-100 amlogic/meson-sm1-x96-air-1000 amlogic/meson-sm1-a95xf3-air-100 amlogic/meson-sm1-a95xf3-air-1000"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
 BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
@@ -71,11 +71,11 @@ BR2_PACKAGE_UTIL_LINUX_LIBMOUNT=y
 # Build as zstd squashfs
 BR2_PACKAGE_HOST_SQUASHFS=y
 
-# Out-of-tree kernel modules
-BR2_PACKAGE_RTL8821AU=y
-BR2_PACKAGE_RTL8192EU=y
-BR2_PACKAGE_RTL8821CE=y
-BR2_PACKAGE_RTL8723DS=y
+# Out-of-tree kernel modules (disabled on 5.15 lts)
+#BR2_PACKAGE_RTL8821AU=y
+#BR2_PACKAGE_RTL8192EU=y
+#BR2_PACKAGE_RTL8821CE=y
+#BR2_PACKAGE_RTL8723DS=y
 
 # Enables ccache
 BR2_CCACHE=y
