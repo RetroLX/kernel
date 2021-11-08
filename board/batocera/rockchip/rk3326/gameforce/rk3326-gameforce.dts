@@ -348,9 +348,13 @@
 	};*/
 };
 
+/*
+TODO 5.15
 &dmc {
 	center-supply = <&vdd_logic>;
 };
+*/
+
 &cpu0 {
 	cpu-supply = <&vdd_arm>;
 };

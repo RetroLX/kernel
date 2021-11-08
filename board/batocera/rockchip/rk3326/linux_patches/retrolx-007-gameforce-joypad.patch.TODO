@@ -57,7 +57,7 @@
 +#include <linux/module.h>
 +#include <linux/slab.h>
 +#include <linux/input.h>
-+#include <linux/input-polldev.h>
++//#include <linux/input-polldev.h>
 +#include <linux/ioport.h>
 +#include <linux/platform_device.h>
 +#include <linux/gpio.h>

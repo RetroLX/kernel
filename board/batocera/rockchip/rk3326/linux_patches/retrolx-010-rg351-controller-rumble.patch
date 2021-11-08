@@ -16,11 +16,10 @@ diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
 index 31d720c..1d55c42 100644
 --- a/drivers/input/joystick/Makefile
 +++ b/drivers/input/joystick/Makefile
-@@ -37,4 +37,4 @@
+@@ -40,3 +40,4 @@
  obj-$(CONFIG_JOYSTICK_WALKERA0701)	+= walkera0701.o
  obj-$(CONFIG_JOYSTICK_XPAD)		+= xpad.o
  obj-$(CONFIG_JOYSTICK_ZHENHUA)		+= zhenhua.o
--
 +obj-$(CONFIG_JOYSTICK_ADC_GPIO)         += adc-gpio.o
 diff --git a/linux-go-next/drivers/input/joystick/adc-gpio.c b/drivers/input/joystick/adc-gpio.c
 new file mode 100644

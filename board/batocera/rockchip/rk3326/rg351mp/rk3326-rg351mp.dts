@@ -408,6 +408,7 @@
 	status = "okay";
 };
 
+/* TODO 5.15
 &dmc {
 	center-supply = <&vdd_logic>;
 	status = "okay";
@@ -422,6 +423,7 @@
 		status = "okay";
 	};
 };
+*/
 
 &gpu_opp_table {
 	/delete-node/ opp-200000000;
