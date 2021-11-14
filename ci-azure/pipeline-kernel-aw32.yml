@@ -1,0 +1,19 @@
+# Builds a RetroLX kernel
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-20.04
+
+container:
+  image: retrolx/build-environment-ubuntu-20.10:latest
+  options: --add-host invisible-mirror.net:1.1.1.1 --add-host mirror.keystealth.org:1.1.1.1 # Blocked mirror and bad mirror workaround
+
+resources:
+- repo: self
+
+steps:
+- script: git submodule init
+- script: git submodule update
+- script: make kernel-aw32-build

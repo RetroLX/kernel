@@ -1,3 +1,4 @@
+# https://hub.docker.com/r/retrolx/build-environment-ubuntu-20.10
 FROM ubuntu:20.10
 ARG DEBIAN_FRONTEND=noninteractive
 RUN dpkg --add-architecture i386 && \
@@ -28,7 +29,6 @@ RUN dpkg --add-architecture i386 && \
 		wget \
 		cpio \
 		dosfstools \
-		dos2unix \
 		libtool \
 		rsync \
 		device-tree-compiler \
@@ -39,6 +39,11 @@ RUN dpkg --add-architecture i386 && \
 		curl \
 		gcc-multilib \
 		g++-multilib \
+		# Used by vice source port
+		xa65 \
+		dos2unix \
+		# Used by devilution source port
+		smpq \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
