@@ -1,7 +1,7 @@
 # Builds a RetroLX kernel
 
 trigger:
-- master
+- ci-wip
 
 pool:
   vmImage: ubuntu-20.04
