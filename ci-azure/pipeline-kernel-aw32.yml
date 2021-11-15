@@ -14,6 +14,7 @@ resources:
 - repo: self
 
 steps:
+- script: export SYSTEM=Linux
 - script: printenv
 - script: git submodule init
 - script: git submodule update

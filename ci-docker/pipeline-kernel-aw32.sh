@@ -2,6 +2,7 @@
 # Builds a RetroLX kernel
 
 date
+export SYSTEM=Linux
 cd /ci-docker
 git clone https://github.com/RetroLX/kernel.git
 cd kernel
