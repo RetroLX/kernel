@@ -8,7 +8,7 @@ pool:
 
 container:
   image: retrolx/build-environment-ubuntu-20.10:latest
-  options: --add-host invisible-mirror.net:1.1.1.1 --add-host mirror.keystealth.org:1.1.1.1 # Blocked mirror and bad mirror workaround
+  options: --add-host invisible-mirror.net:1.1.1.1 # --add-host mirror.keystealth.org:1.1.1.1 Blocked mirror and bad mirror workaround
 
 resources:
 - repo: self
