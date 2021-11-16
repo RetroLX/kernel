@@ -18,7 +18,7 @@ steps:
 - script: git submodule init
 - script: git submodule update
 # - script: make kernel-aw32-build
-- script: mkdirs output/kernel-aw32/images/
+- script: mkdir -p output/kernel-aw32/images/
 - script: touch output/kernel-aw32/images/kernel.tar.gz
 - script: mkdir publish
 - script: mv output/kernel-aw32/images/kernel.tar.gz publish/kernel-aw32-dev.tar.gz
