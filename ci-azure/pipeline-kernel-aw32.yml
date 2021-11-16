@@ -30,5 +30,5 @@ steps:
     vstsFeedPublish: 'RetroLX kernels/Kernels'
     vstsFeedPackagePublish: 'kernel-aw32'
     versionOption: custom
-    versionPublish: '5.15.2-2021.11.16'
+    versionPublish: '5.15.2-2021.11.17'
     packagePublishDescription: 'Kernel for aw32 with version 5.15.2'
