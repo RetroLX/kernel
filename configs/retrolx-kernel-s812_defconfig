@@ -83,8 +83,8 @@ BR2_PACKAGE_HOST_SQUASHFS=y
 # KO on 5.15 BR2_PACKAGE_RTL8821AU=y
 # KO on 5.15 BR2_PACKAGE_RTL8192EU=y
 
-# Enables ccache
-BR2_CCACHE=y
+# Disable ccache
+BR2_CCACHE=n
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.

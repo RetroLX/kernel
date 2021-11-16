@@ -78,8 +78,8 @@ BR2_PACKAGE_MTD=y
 # KO on 5.15 BR2_PACKAGE_RTL8192EU=y
 # KO on 5.15 BR2_PACKAGE_RTL8189FS=y
 
-# Enables ccache
-BR2_CCACHE=y
+# Disable ccache
+BR2_CCACHE=n
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.
