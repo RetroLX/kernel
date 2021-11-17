@@ -1,4 +1,4 @@
-# Builds a RetroLX kernel
+# Builds a RetroLX kernel Test
 
 trigger:
 - ci-wip
