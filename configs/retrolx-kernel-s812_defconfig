@@ -61,7 +61,7 @@ BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocer
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="meson8m2-mxiii meson8m2-mxiii-plus meson8m2-m8s meson8-minix-neo-x8 meson8m2-wetek-core"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/s812/linux_patches"
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/linux_patches $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/s812/linux_patches"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/s812/linux-defconfig-fragment.config"
 
 # S812 needed kernel changes
@@ -83,8 +83,8 @@ BR2_PACKAGE_HOST_SQUASHFS=y
 # KO on 5.15 BR2_PACKAGE_RTL8821AU=y
 # KO on 5.15 BR2_PACKAGE_RTL8192EU=y
 
-# Enables ccache
-BR2_CCACHE=y
+# Disable ccache
+BR2_CCACHE=n
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.

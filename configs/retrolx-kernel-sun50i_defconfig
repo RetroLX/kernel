@@ -59,7 +59,7 @@ BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocer
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="allwinner/sun50i-h5-bananapi-m2-plus-v1.2 allwinner/sun50i-h5-bananapi-m2-plus allwinner/sun50i-h5-emlid-neutis-n5-devboard allwinner/sun50i-h5-libretech-all-h3-cc allwinner/sun50i-h5-libretech-all-h3-it allwinner/sun50i-h5-libretech-all-h5-cc allwinner/sun50i-h5-nanopi-neo-plus2 allwinner/sun50i-h5-nanopi-neo2 allwinner/sun50i-h5-orangepi-pc2 allwinner/sun50i-h5-orangepi-prime allwinner/sun50i-h5-orangepi-zero-plus allwinner/sun50i-h5-orangepi-zero-plus2 allwinner/sun50i-h6-beelink-gs1 allwinner/sun50i-h6-orangepi-3 allwinner/sun50i-h6-orangepi-lite2 allwinner/sun50i-h6-orangepi-one-plus allwinner/sun50i-h6-pine-h64-model-b allwinner/sun50i-h6-pine-h64 allwinner/sun50i-h6-tanix-tx6"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/sun50i/linux_patches"
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/linux_patches $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/sun50i/linux_patches"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/allwinner/sun50i/linux-defconfig-fragment.config"
 
 # Required to build ??
@@ -78,8 +78,8 @@ BR2_PACKAGE_MTD=y
 # KO on 5.15 BR2_PACKAGE_RTL8192EU=y
 # KO on 5.15 BR2_PACKAGE_RTL8189FS=n
 
-# Enables ccache
-BR2_CCACHE=y
+# Disable ccache
+BR2_CCACHE=n
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.

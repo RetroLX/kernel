@@ -33,10 +33,10 @@ stages:
         targetType: 'inline'
         script: 'cd $(Build.SourcesDirectory)'
     - task: Bash@3
-      displayName: Build Allwinner H3 kernel
+      displayName: Build Allwinner A20/H3 kernel
       inputs:
         targetType: 'inline'
-        script: 'cd $(Build.SourcesDirectory) && make kernel-h3-build'
+        script: 'cd $(Build.SourcesDirectory) && make kernel-aw32-build'
     - task: Bash@3
       displayName: Build Allwinner H5 kernel
       inputs:
