@@ -1,7 +1,18 @@
-# Builds a RetroLX kernel Test Test
+# Builds a RetroLX kernel
 
-trigger:
-- ci-wip
+#
+# These are the variables to edit
+#
+
+variables:
+- name: version
+  value: 5.15.2
+- name: arch
+  value: aw32
+
+#
+# This is a template, all of them SHOULD look the same
+#
 
 pool:
   vmImage: ubuntu-20.04
@@ -10,25 +21,21 @@ container:
   image: retrolx/build-environment-ubuntu-20.10:latest
   options: --add-host invisible-mirror.net:1.1.1.1 # Blocked mirror workaround
 
-resources:
-- repo: self
-
 steps:
 - script: printenv
-- script: git submodule init
-- script: git submodule update
-- script: make kernel-aw32-build
-# - script: mkdir -p output/kernel-aw32/images/
-# - script: touch output/kernel-aw32/images/kernel.tar.gz
+- script: git submodule init && git submodule update
+- script: mkdir -p output/kernel-${{ variables.arch }}/images/
+- script: touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
+# - script: make kernel-${{ variables.arch }}-build
 - script: mkdir publish
-- script: mv output/kernel-aw32/images/kernel.tar.gz publish/kernel-aw32-5.15.2.tar.gz
+- script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
 - task: UniversalPackages@0
   displayName: Universal Publish
   inputs:
     command: publish
     publishDirectory: 'publish'
     vstsFeedPublish: 'RetroLX kernels/Kernels'
-    vstsFeedPackagePublish: 'kernel-aw32'
+    vstsFeedPackagePublish: 'kernel-${{ variables.arch }}'
     versionOption: custom
-    versionPublish: '5.15.2-2021.11.17'
-    packagePublishDescription: 'Kernel for aw32 with version 5.15.2'
+    versionPublish: '${{ variables.version }}-$(Build.BuildNumber)'
+    packagePublishDescription: 'Kernel for ${{ variables.arch }} with version ${{ variables.version }}'
