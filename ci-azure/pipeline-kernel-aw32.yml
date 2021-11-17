@@ -24,9 +24,7 @@ container:
 steps:
 - script: printenv
 - script: git submodule init && git submodule update
-- script: mkdir -p output/kernel-${{ variables.arch }}/images/
-- script: touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
-# - script: make kernel-${{ variables.arch }}-build
+- script: make kernel-${{ variables.arch }}-build
 - script: mkdir publish
 - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
 - task: UniversalPackages@0
