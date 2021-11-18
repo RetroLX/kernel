@@ -4,8 +4,6 @@
 # These are the variables to edit
 #
 
-name: kernel - h616
-
 variables:
 - name: version
   value: 5.15.2
