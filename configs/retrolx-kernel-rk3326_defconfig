@@ -79,8 +79,8 @@ BR2_PACKAGE_MTD=y
 #BR2_PACKAGE_RTL8192EU=y
 #BR2_PACKAGE_ESP8089=y
 
-# Enables ccache
-BR2_CCACHE=y
+# Disable ccache
+BR2_CCACHE=n
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.
