@@ -16,7 +16,7 @@ variables:
 
 jobs:
 - job: build
-  timeoutInMinutes: 120
+  timeoutInMinutes: 360
   pool:
     vmImage: ubuntu-20.04
   container:
