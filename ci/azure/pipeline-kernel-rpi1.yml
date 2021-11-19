@@ -14,6 +14,10 @@ variables:
 # This is a template, all of them SHOULD look the same
 #
 
+jobs:
+- job: build
+  timeoutInMinutes: 120
+
 pool:
   vmImage: ubuntu-20.04
 
