@@ -1,4 +1,4 @@
-menu "batocera.linux"
+menu "RetroLX.kernel"
 
 menu "System"
 
@@ -17,13 +17,9 @@ menu "System"
 endmenu
 
 menu "Controllers"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/db9_gpio_rpi/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/gamecon_gpio_rpi/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/mk_arcade_joystick_rpi/Config.in"
-endmenu
-
-menu "Libraries"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/libglvnd/Config.in"
+  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/db9_gpio_rpi/Config.in"
+  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/gamecon_gpio_rpi/Config.in"
+  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/mk_arcade_joystick_rpi/Config.in"
 endmenu
 
 endmenu
