@@ -15,12 +15,11 @@ These kernels target both ARM and x86 architectures used by:
 Find more information about RetroLX at [retrolx.org](https://retrolx.org).
 
 # Repository Structure
-- board
-- buildroot
+- board: Contains hardware-specific / board-specific files. Mostly kernel configuration and kernel patches.
+- buildroot: submodule infrastructure provided by the [Buildroot project](https://buildroot.org/).
 - ci: See [Continuous Integration](#Continuous) for details.
 - configs: Contains one config file per available architecture.
-- package
-- scripts
+- package: Contains custom RetroLX packages not included in Buildroot. These are used to either build the kernel or rootfs.
 
 # Build
 
