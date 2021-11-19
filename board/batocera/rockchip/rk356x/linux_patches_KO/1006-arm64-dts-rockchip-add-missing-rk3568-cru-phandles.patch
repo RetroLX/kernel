@@ -25,12 +25,4 @@ index 0905fac0726a..8ba0516eedd8 100644
  		#clock-cells = <1>;
  		#reset-cells = <1>;
  	};
-@@ -225,6 +227,7 @@ pmucru: clock-controller@fdd00000 {
- 	cru: clock-controller@fdd20000 {
- 		compatible = "rockchip,rk3568-cru";
- 		reg = <0x0 0xfdd20000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 	};
 
