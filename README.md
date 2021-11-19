@@ -1,5 +1,44 @@
-RetroLX kernel building infrastructure (based on Buildroot) + configs and patches 
+![RetroLX](retrolx-logo.png)
 
-This repository provides buildroot-based infrastructure for our custom Linux kernels targeted at ARM embedded devices, handheld gaming consoles and also generic x86_64 devices. Those kernels are targeted at retrogaming usage, and used by RetroLX Linux OS distribution.
+# kernel
 
-More information at : https://retrolx.org
+This repository provides buildroot-based infrastructure plus configs and patches to build custom Linux kernels.
+
+These kernels are used by RetroLX Linux OS distribution dedicated to retrogaming. 
+
+These kernels target both ARM and x86 architectures used by:
+- Embedded devices
+- Gaming consoles
+- Gaming handhelds
+- Generic x86 and x86_64 devices.
+
+Find more information about RetroLX at [retrolx.org](https://retrolx.org).
+
+# Repository Structure
+- board
+- buildroot
+- ci: See [Continuous Integration](#Continuous) for details.
+- configs: Contains one config file per available architecture.
+- package
+- scripts
+
+# Build
+
+The current official build environment is Ubuntu 20.10. Additional packages required are documented on the docker image ``ci/docker/Dockerfile``.
+
+How to build is documented by the script ``ci/local/build-kernel-arch.sh``.
+
+Given your environment fullfill the requirements you can build locally. Example call:
+```
+./build-kernel-arch.sh x86_64
+```
+
+Alternatively the official Docker environment can be used. Example call:
+```
+./build-kernel-arch-docker.sh x86_64
+```
+# Continuous Integration
+
+For every available architecture config file at ``config`` there is an asociated Microsoft Azure build pipeline defined at ``ci/azure``.
+
+The current state for the build of every architecture supported by the master branch can be check at [Azure Pipelines](https://dev.azure.com/retrolx/RetroLX%20kernels/_build?view=folders).

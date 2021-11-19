@@ -8,7 +8,7 @@ variables:
 - name: version
   value: 5.15.2
 - name: arch
-  value: aw32
+  value: h616
 
 #
 # This is a template, all of them SHOULD look the same
