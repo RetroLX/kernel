@@ -23,9 +23,9 @@ Find more information about RetroLX at [retrolx.org](https://retrolx.org).
 
 # Build
 
-The current official build environment is Ubuntu 20.10. Additional packages required are documented on the docker image ``ci/docker/Dockerfile``.
+The current official build environment is Ubuntu 20.10. Additional packages required are documented on the docker image ``kernel/ci/docker/Dockerfile``.
 
-How to build is documented by the script ``ci/local/build-kernel-arch.sh``.
+How to build is documented by the script ``kernel/ci/local/build-kernel-arch.sh`` that will start the build reusing the currently checkout repository.
 
 Given your environment fullfill the requirements you can build locally. Example call:
 ```
@@ -39,14 +39,12 @@ Alternatively the official Docker environment can be used. Example call:
 
 Where ARCH is one of the available architectures.
 
-In both cases the scripts download a clean kernel repository from master to make a build on the same directory and show the output on real time.
-
-The Docker build pipes the output to ``allout.log`` by default.
+The Docker build pipes the output to ``kernel/ci/local/docker-output.log`` by default.
 
 The main artifact of the build can be found at: ``kernel/output/kernel-ARCH/images/kernel.tar.gz``.
 
 # Continuous Integration
 
-For every available architecture config file at ``config`` there is an asociated Microsoft Azure build pipeline defined at ``ci/azure``.
+For every available architecture config file at ``config`` there is an asociated Microsoft Azure build pipeline defined at ``kernel/ci/azure``.
 
 The current state for the build of every architecture supported by the master branch can be check at [Azure Pipelines](https://dev.azure.com/retrolx/RetroLX%20kernels/_build?view=folders).
