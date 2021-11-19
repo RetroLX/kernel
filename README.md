@@ -39,7 +39,9 @@ Alternatively the official Docker environment can be used. Example call:
 
 Where ARCH is one of the available architectures.
 
-In both cases the scripts download a clean kernel repository from master to make a build on the same directory.
+In both cases the scripts download a clean kernel repository from master to make a build on the same directory and show the output on real time.
+
+The Docker build also pipes the output to allout.log by default.
 
 The main artifact of the build can be found at: ``kernel/output/kernel-ARCH/images/kernel.tar.gz``.
 
