@@ -1,6 +1,5 @@
 ![RetroLX](retrolx-logo.png)
 
-
 # kernel
 
 This repository provides buildroot-based infrastructure plus configs and patches to build custom Linux kernels.
