@@ -20,10 +20,6 @@ menu "Controllers"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/db9_gpio_rpi/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/gamecon_gpio_rpi/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/mk_arcade_joystick_rpi/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/qtsixa/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/qtsixa-shanwan/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/xarcade2jstick/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/controllers/uinput-joystick/Config.in"
 endmenu
 
 menu "Libraries"
