@@ -29,13 +29,20 @@ How to build is documented by the script ``ci/local/build-kernel-arch.sh``.
 
 Given your environment fullfill the requirements you can build locally. Example call:
 ```
-./build-kernel-arch.sh x86_64
+./build-kernel-arch.sh ARCH
 ```
 
 Alternatively the official Docker environment can be used. Example call:
 ```
-./build-kernel-arch-docker.sh x86_64
+./build-kernel-arch-docker.sh ARCH
 ```
+
+Where ARCH is one of the available architectures.
+
+In both cases the scripts download a clean kernel repository from master to make a build on the same directory.
+
+The main artifact of the build can be found at: ``kernel/output/kernel-ARCH/images/kernel.tar.gz``.
+
 # Continuous Integration
 
 For every available architecture config file at ``config`` there is an asociated Microsoft Azure build pipeline defined at ``ci/azure``.
