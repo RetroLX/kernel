@@ -1,0 +1,28 @@
+From: Peter Geis <pgwipeout@gmail.com>
+Subject: [PATCH 6/9] arm64: dts: rockchip: add missing rk3568 cru phandles
+Date: Wed, 28 Jul 2021 09:55:31 -0400
+Content-Type: text/plain; charset="utf-8"
+
+The grf and pmugrf phandles are necessary for the pmucru and cru to
+modify clocks. Add these phandles to permit adjusting the clock rates
+and muxes.
+
+Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+index 0905fac0726a..8ba0516eedd8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+@@ -218,6 +218,8 @@ grf: syscon@fdc60000 {
+ 	pmucru: clock-controller@fdd00000 {
+ 		compatible = "rockchip,rk3568-pmucru";
+ 		reg = <0x0 0xfdd00000 0x0 0x1000>;
++		rockchip,grf = <&grf>;
++		rockchip,pmugrf = <&pmugrf>;
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 	};
+

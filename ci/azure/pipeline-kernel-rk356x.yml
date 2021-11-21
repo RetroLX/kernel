@@ -1,0 +1,43 @@
+# Builds a RetroLX kernel
+
+#
+# These are the variables to edit
+#
+
+variables:
+- name: version
+  value: 5.15.2
+- name: arch
+  value: rk356x
+
+#
+# This is a template, all of them SHOULD look the same
+#
+
+trigger:
+  batch: true # batch changes if true; start a new build for every push if false (default)
+
+jobs:
+- job: build
+  timeoutInMinutes: 360
+  pool:
+    vmImage: ubuntu-20.04
+  container:
+    image: retrolx/build-environment-ubuntu-20.10:latest
+    options: --add-host invisible-mirror.net:1.1.1.1 # Blocked mirror workaround
+  steps:
+  - script: printenv
+  - script: git submodule init && git submodule update
+  - script: make kernel-${{ variables.arch }}-build
+  - script: mkdir publish
+  - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
+  - task: UniversalPackages@0
+    displayName: Universal Publish
+    inputs:
+      command: publish
+      publishDirectory: 'publish'
+      vstsFeedPublish: 'RetroLX kernels/Kernels'
+      vstsFeedPackagePublish: 'kernel-${{ variables.arch }}'
+      versionOption: custom
+      versionPublish: '${{ variables.version }}-$(Build.BuildNumber)'
+      packagePublishDescription: 'Kernel for ${{ variables.arch }} with version ${{ variables.version }}'
