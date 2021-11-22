@@ -36,6 +36,7 @@ RUN dpkg --add-architecture i386 && \
 		locales \
 		graphviz \
 		python \
+		python3-pip \
 		curl \
 		gcc-multilib \
 		g++-multilib \
@@ -44,6 +45,7 @@ RUN dpkg --add-architecture i386 && \
 		dos2unix \
 		# Used by devilution source port
 		smpq \
+	&& pip3 install dtschema \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
