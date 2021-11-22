@@ -1,0 +1,9 @@
+diff --git a/sound/soc/codecs/rk817_codec.c b/sound/soc/codecs/rk817_codec.c
+index 943d7d933e81..03f24edfe4f6 100644
+--- a/sound/soc/codecs/rk817_codec.c
++++ b/sound/soc/codecs/rk817_codec.c
+@@ -539,3 +539,4 @@ module_platform_driver(rk817_codec_driver);
+ MODULE_DESCRIPTION("ASoC RK817 codec driver");
+ MODULE_AUTHOR("binyuan <kevan.lan@rock-chips.com>");
+ MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:rk817-codec");
