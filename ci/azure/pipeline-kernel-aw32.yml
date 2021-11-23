@@ -41,6 +41,7 @@ jobs:
       touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
+  - script: ping google.com
   - script: |
       echo "Upload"
       ping google.com
