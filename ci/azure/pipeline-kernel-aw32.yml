@@ -22,6 +22,9 @@ variables:
 
 trigger:
   batch: true # batch changes if true; start a new build for every push if false (default)
+  branches:
+    include:
+    - ci-wip
 
 jobs:
 - job: build
