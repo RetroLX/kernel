@@ -27,10 +27,10 @@ jobs:
     options: --add-host invisible-mirror.net:1.1.1.1 # Blocked mirror workaround
   steps:
   - script: printenv
-  - script: git submodule init && git submodule update
-  - script: make kernel-${{ variables.arch }}-build
-  - script: mkdir publish
-  - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
+  git submodule init && git submodule update
+  make kernel-${{ variables.arch }}-build
+  mkdir publish
+  mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
   - task: UniversalPackages@0
     displayName: Universal Publish
     inputs:
