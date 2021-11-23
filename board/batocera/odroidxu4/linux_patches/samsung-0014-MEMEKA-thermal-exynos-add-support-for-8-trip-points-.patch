@@ -1,17 +1,16 @@
-From 762f3313b539d469b795abea8da952d891e0e836 Mon Sep 17 00:00:00 2001
+From 20570c820357eb0cfee14342328a3e6920e8a320 Mon Sep 17 00:00:00 2001
 From: memeka <mihailescu2m@gmail.com>
 Date: Tue, 10 Jul 2018 22:13:03 +0930
-Subject: [PATCH 10/75] ODROID-XU4: thermal: exynos: add support for 8 trip
- points on Exynos5422 TMU
+Subject: [PATCH 14/25] MEMEKA: thermal: exynos: add support for 8 trip points
+ on Exynos5422 TMU
 
-Change-Id: I6014d6d3fdecb6f58c6160f79ac969c6816f365d
 Signed-off-by: memeka <mihailescu2m@gmail.com>
 ---
  drivers/thermal/samsung/exynos_tmu.c | 18 ++++++++++++++++--
  1 file changed, 16 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index f4ab4c5b4b62..3c6d319063a6 100644
+index e9a90bc23b11..b49df21fa0e7 100644
 --- a/drivers/thermal/samsung/exynos_tmu.c
 +++ b/drivers/thermal/samsung/exynos_tmu.c
 @@ -915,8 +915,6 @@ static int exynos_map_dt_data(struct platform_device *pdev)
@@ -47,5 +46,5 @@ index f4ab4c5b4b62..3c6d319063a6 100644
  		data->tmu_set_trip_temp = exynos5433_tmu_set_trip_temp;
  		data->tmu_set_trip_hyst = exynos5433_tmu_set_trip_hyst;
 -- 
-2.25.1
+2.17.1
 

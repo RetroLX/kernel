@@ -1,19 +1,18 @@
-From 46c74b151cecc21b2310e2737d8c2768428be8dc Mon Sep 17 00:00:00 2001
+From f8f90c73fe3c5b24c806ae17af657321afb47f4f Mon Sep 17 00:00:00 2001
 From: memeka <mihailescu2m@gmail.com>
 Date: Tue, 22 Jan 2019 11:55:07 +1030
-Subject: [PATCH 11/75] ODROID-XU4: arm: dts: exynos5422: enable Exynos5422 TMU
+Subject: [PATCH 15/25] MEMEKA: arm: dts: exynos5422: enable Exynos5422 TMU
 
-Change-Id: I3fb73f0f9a2f349fc667354a607c50ffefa7084e
 Signed-off-by: memeka <mihailescu2m@gmail.com>
 ---
  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index e7958dbecfd2..644bb71dc218 100644
+index ab27ff8bc3dc..4a4710efb429 100644
 --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
 +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -1025,22 +1025,27 @@ &ppmu_dmc1_1 {
+@@ -1030,22 +1030,27 @@
  
  &tmu_cpu0 {
  	vtmu-supply = <&ldo7_reg>;
@@ -42,5 +41,5 @@ index e7958dbecfd2..644bb71dc218 100644
  
  &gpu {
 -- 
-2.25.1
+2.17.1
 

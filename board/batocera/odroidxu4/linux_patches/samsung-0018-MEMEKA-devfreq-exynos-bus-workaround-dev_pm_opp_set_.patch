@@ -1,7 +1,7 @@
-From 4189dd5119cb9c2e59315e65e6c44fcd779235bb Mon Sep 17 00:00:00 2001
+From c7eed0d079bb5febcb1f6a460ec9cba83bf579ea Mon Sep 17 00:00:00 2001
 From: "k.konieczny@partner.samsung.com" <k.konieczny@partner.samsung.com>
 Date: Tue, 8 Oct 2019 15:49:23 +0200
-Subject: [PATCH 13/75] ODROID-XU4: devfreq: exynos-bus: workaround
+Subject: [PATCH 18/25] MEMEKA: devfreq: exynos-bus: workaround
  dev_pm_opp_set_rate() errors on Exynos5422/5800 SoCs
 
 Commit 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use
@@ -19,7 +19,6 @@ in clock rate outside of OPP range. Add workaround for this in
 exynos_bus_parse_of() by adjusting clock rate to those present in OPP.
 
 Fixes: 4294a779bd8d ("PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()")
-Change-Id: Ic07e2d68e0da2efa07cb81cc9b4f76d8ad15bd76
 Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 Signed-off-by: memeka <mihailescu2m@gmail.com>
@@ -28,10 +27,10 @@ Signed-off-by: memeka <mihailescu2m@gmail.com>
  1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index e689101abc93..061f36c00dd4 100644
+index 8fa8eb541373..5b167eadb21e 100644
 --- a/drivers/devfreq/exynos-bus.c
 +++ b/drivers/devfreq/exynos-bus.c
-@@ -247,7 +247,7 @@ static int exynos_bus_parse_of(struct device_node *np,
+@@ -243,7 +243,7 @@ static int exynos_bus_parse_of(struct device_node *np,
  {
  	struct device *dev = bus->dev;
  	struct dev_pm_opp *opp;
@@ -40,7 +39,7 @@ index e689101abc93..061f36c00dd4 100644
  	int ret;
  
  	/* Get the clock to provide each bus with source clock */
-@@ -271,13 +271,21 @@ static int exynos_bus_parse_of(struct device_node *np,
+@@ -267,13 +267,21 @@ static int exynos_bus_parse_of(struct device_node *np,
  	}
  
  	rate = clk_get_rate(bus->clk);
@@ -65,5 +64,5 @@ index e689101abc93..061f36c00dd4 100644
  	dev_pm_opp_put(opp);
  
 -- 
-2.25.1
+2.17.1
 
