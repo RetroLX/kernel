@@ -17,8 +17,7 @@ variables:
 trigger:
   batch: true # batch changes if true; start a new build for every push if false (default)
   branches:
-    include:
-    - master
+    include: [master]
 
 jobs:
 - job: build
