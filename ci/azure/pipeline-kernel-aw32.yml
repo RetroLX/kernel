@@ -44,8 +44,7 @@ jobs:
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
   - script: |
       echo "Upload"
-      echo ${{ variables.repositoryHost }}
-      echo ${{ variables.repositoryUser }}
+      ping ${{ variables.repositoryHost }}
       lftp << END_SCRIPT
       open sftp://${{ variables.repositoryHost }}
       user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
