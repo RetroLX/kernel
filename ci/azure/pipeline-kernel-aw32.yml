@@ -26,8 +26,8 @@ jobs:
     image: retrolx/build-environment-ubuntu-20.10:latest
     options: --add-host invisible-mirror.net:1.1.1.1 # Blocked mirror workaround
   steps:
-  - script: printenv \
-  git submodule init && git submodule update \
-  make kernel-${{ variables.arch }}-build \
-  mkdir publish \
-  mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
+  - script: printenv
+    git submodule init && git submodule update
+    make kernel-${{ variables.arch }}-build
+    mkdir publish
+    mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
