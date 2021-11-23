@@ -43,6 +43,7 @@ jobs:
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
   - script: |
       echo "Upload"
+      ping google.com
       ping repository.retrolx.org
       lftp << END_SCRIPT
       open sftp://${{ variables.repositoryHost }}
