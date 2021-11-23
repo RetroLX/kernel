@@ -44,8 +44,6 @@ jobs:
   - script: ping google.com
   - script: |
       echo "Upload"
-      ping google.com
-      ping repository.retrolx.org
       lftp << END_SCRIPT
       open sftp://${{ variables.repositoryHost }}
       user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
