@@ -28,15 +28,14 @@ jobs:
   steps:
   - script: |
       printenv
-#      git submodule init && git submodule update
-#      make kernel-${{ variables.arch }}-build
       mkdir -p output/kernel-${{ variables.arch }}/images
       touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
-      lftp <<
+      lftp << END_SCRIPT
       open sftp://$REPOSITORY_HOST
       user $REPOSITORY_USER $REPOSITORY_PASSWORD
       mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
       put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
       quit
+      END_SCRIPT
