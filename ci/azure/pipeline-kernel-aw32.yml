@@ -9,6 +9,8 @@ variables:
   value: 5.15.2
 - name: arch
   value: aw32
+- name: repositoryHost
+  value: ${{ REPOSITORY_HOST }}
 
 #
 # This is a template, all of them SHOULD look the same
@@ -33,7 +35,7 @@ jobs:
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
       lftp << END_SCRIPT
-      open sftp://${{ REPOSITORY_HOST }}
+      open sftp://${{ variables.repositoryHost }}
       user ${{ REPOSITORY_USER }} ${{ REPOSITORY_PASSWORD }}
       mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
       put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
