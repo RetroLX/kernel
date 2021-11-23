@@ -41,13 +41,22 @@ jobs:
       touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
-  - script: ping google.com
-  - script: |
-      echo "Upload"
-      lftp << END_SCRIPT
-      open sftp://${{ variables.repositoryHost }}
-      user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
-      mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
-      put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
-      quit
-      END_SCRIPT
+  - task: CopyFilesOverSSH@0
+    inputs:
+      sshEndpoint: repository.retrolx.org
+      sourceFolder: publish
+      contents: '**' 
+      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}
+      cleanTargetFolder: true
+      overwrite: true
+      failOnEmptySource: true
+      #flattenFolders: false
+  # - script: |
+  #     echo "Upload"
+  #     lftp << END_SCRIPT
+  #     open sftp://${{ variables.repositoryHost }}
+  #     user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
+  #     mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
+  #     put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
+  #     quit
+  #     END_SCRIPT
