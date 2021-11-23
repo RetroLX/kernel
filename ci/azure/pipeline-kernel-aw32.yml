@@ -45,6 +45,7 @@ jobs:
   - script: |
       echo "Upload"
       echo ${{ variables.repositoryHost }}
+      echo ${{ variables.repositoryUser }}
       lftp << END_SCRIPT
       open sftp://${{ variables.repositoryHost }}
       user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
