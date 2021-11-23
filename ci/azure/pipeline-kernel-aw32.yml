@@ -33,11 +33,15 @@ jobs:
     options: --add-host invisible-mirror.net:1.1.1.1 # Blocked mirror workaround
   steps:
   - script: |
+      echo "Build"
       printenv
       mkdir -p output/kernel-${{ variables.arch }}/images
       touch output/kernel-${{ variables.arch }}/images/kernel.tar.gz
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
+  - script: |
+      echo "Upload"
+      echo ${{ variables.repositoryHost }}
       lftp << END_SCRIPT
       open sftp://${{ variables.repositoryHost }}
       user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
