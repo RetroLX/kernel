@@ -46,17 +46,7 @@ jobs:
       sshEndpoint: repository.retrolx.org
       sourceFolder: publish
       contents: '**' 
-      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}
+      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
       cleanTargetFolder: true
       overwrite: true
       failOnEmptySource: true
-      #flattenFolders: false
-  # - script: |
-  #     echo "Upload"
-  #     lftp << END_SCRIPT
-  #     open sftp://${{ variables.repositoryHost }}
-  #     user ${{ variables.repositoryUser }} ${{ variables.repositoryPassword }}
-  #     mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
-  #     put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
-  #     quit
-  #     END_SCRIPT
