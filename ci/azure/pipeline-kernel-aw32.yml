@@ -10,7 +10,7 @@ variables:
 - name: arch
   value: aw32
 - name: repositoryHost
-  value: ${{ REPOSITORY_HOST }}
+  value: $(REPOSITORY_HOST)
 
 #
 # This is a template, all of them SHOULD look the same
