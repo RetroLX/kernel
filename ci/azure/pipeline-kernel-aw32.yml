@@ -33,8 +33,8 @@ jobs:
       mkdir publish
       mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
       lftp << END_SCRIPT
-      open sftp://$REPOSITORY_HOST
-      user $REPOSITORY_USER $REPOSITORY_PASSWORD
+      open sftp://${{ REPOSITORY_HOST }}
+      user ${{ REPOSITORY_USER }} ${{ REPOSITORY_PASSWORD }}
       mkdir -p www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
       put publish/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz -o www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)/kernel-${{ variables.arch }}-${{ variables.version }}-$(Build.BuildNumber).tar.gz
       quit
