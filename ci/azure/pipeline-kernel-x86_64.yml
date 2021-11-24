@@ -16,6 +16,8 @@ variables:
 
 trigger:
   batch: true # batch changes if true; start a new build for every push if false (default)
+  branches:
+    include: [master]
 
 jobs:
 - job: build
@@ -31,13 +33,22 @@ jobs:
   - script: make kernel-${{ variables.arch }}-build
   - script: mkdir publish
   - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
-  - task: UniversalPackages@0
-    displayName: Universal Publish
+  - task: CopyFilesOverSSH@0
     inputs:
-      command: publish
-      publishDirectory: 'publish'
-      vstsFeedPublish: 'RetroLX kernels/Kernels'
-      vstsFeedPackagePublish: 'kernel-${{ variables.arch }}'
-      versionOption: custom
-      versionPublish: '${{ variables.version }}-$(Build.BuildNumber)'
-      packagePublishDescription: 'Kernel for ${{ variables.arch }} with version ${{ variables.version }}'
+      sshEndpoint: repository.retrolx.org
+      sourceFolder: publish
+      contents: '**' 
+      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}
+      cleanTargetFolder: true
+      overwrite: true
+      failOnEmptySource: true
+  # - task: UniversalPackages@0
+  #   displayName: Universal Publish
+  #   inputs:
+  #     command: publish
+  #     publishDirectory: 'publish'
+  #     vstsFeedPublish: 'RetroLX kernels/Kernels'
+  #     vstsFeedPackagePublish: 'kernel-${{ variables.arch }}'
+  #     versionOption: custom
+  #     versionPublish: '${{ variables.version }}-$(Build.BuildNumber)'
+  #     packagePublishDescription: 'Kernel for ${{ variables.arch }} with version ${{ variables.version }}'
