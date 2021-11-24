@@ -38,7 +38,7 @@ jobs:
       sshEndpoint: repository.retrolx.org
       sourceFolder: publish
       contents: '**' 
-      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}-$(Build.BuildNumber)
+      targetFolder: www/kernel/${{ variables.arch }}/${{ variables.version }}
       cleanTargetFolder: true
       overwrite: true
       failOnEmptySource: true
