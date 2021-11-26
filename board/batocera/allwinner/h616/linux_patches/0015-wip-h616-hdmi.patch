@@ -485,9 +485,9 @@ index 000000000000..4ce0c76d6c25
 +	writel(0, reg + 0x24);
 +	writel(0x0000A980, reg + 0x28);
 +
-+	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, ccu_desc);
-+	if (ret)
-+		goto err_assert_reset;
++	of_sunxi_ccu_probe(pdev->dev.of_node, reg, ccu_desc);
++	//if (ret)
++	//	goto err_assert_reset;
 +
 +	return 0;
 +
