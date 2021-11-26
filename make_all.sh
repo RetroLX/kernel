@@ -9,7 +9,7 @@ source ./gh_token
 #TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.15.4"
+KERNEL_VERSION="5.15.5"
 
 # Allwinner kernels
 make kernel-aw32-build
