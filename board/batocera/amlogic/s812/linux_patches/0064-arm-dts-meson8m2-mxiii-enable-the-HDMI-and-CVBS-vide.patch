@@ -37,7 +37,7 @@ index 02fdad65db20..b6f4e0e1274a 100644
  		clock-names = "ext_clock";
  	};
  
-+	tv-connector {
++	cvbs-connector {
 +		compatible = "composite-video-connector";
 +
 +		port {

@@ -66,7 +66,7 @@ index 8f294de22e6a..d2210a983955 100644
 +		sound-name-prefix = "DIT";
 +	};
 +
- 	tv-connector {
+ 	cvbs-connector {
  		compatible = "composite-video-connector";
  
 @@ -184,6 +205,14 @@ xtal_32k_out: xtal-32k-out-clk {

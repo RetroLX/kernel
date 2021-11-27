@@ -71,7 +71,7 @@ index d54ea42c6eb2..b15a165a9bef 100644
 +		};
 +	};
 +
-+	tv-connector {
++	cvbs-connector {
 +		compatible = "composite-video-connector";
 +
 +		port {
