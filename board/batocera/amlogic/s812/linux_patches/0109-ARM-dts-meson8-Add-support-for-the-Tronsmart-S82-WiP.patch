@@ -131,7 +131,7 @@ index 000000000000..c9b8264056a3
 +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
 +
 +			codec-0 {
-+				sound-dai = <&hdmi_tx>;
++				sound-dai = <&hdmi_tx 0>;
 +			};
 +		};
 +
