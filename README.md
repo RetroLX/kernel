@@ -16,7 +16,7 @@ Find more information about RetroLX at [retrolx.org](https://retrolx.org).
 
 # Repository Structure
 - board: Contains hardware-specific / board-specific files. Mostly kernel configuration and kernel patches.
-- buildroot: submodule infrastructure provided by the [Buildroot project](https://buildroot.org/).
+- buildroot: Submodule infrastructure provided by the [Buildroot project](https://buildroot.org/).
 - ci: See [Continuous Integration](#Continuous) for details.
 - configs: Contains one config file per available architecture.
 - package: Contains custom RetroLX packages not included in Buildroot. These are used to either build the kernel or rootfs.
@@ -48,3 +48,5 @@ The main artifact of the build can be found at: ``kernel/output/kernel-ARCH/imag
 For every available architecture config file at ``config`` there is an asociated Microsoft Azure build pipeline defined at ``kernel/ci/azure``.
 
 The current state for the build of every architecture supported by the master branch can be check at [Azure Pipelines](https://dev.azure.com/retrolx/RetroLX%20kernels/_build?view=folders).
+
+The current kernel build of every architecture supported by the master branch can be check at [Retrolx Repository](https://repository.retrolx.org/).

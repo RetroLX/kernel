@@ -6,7 +6,7 @@
 
 variables:
 - name: version
-  value: 5.15.2
+  value: 5.15.6
 - name: arch
   value: rk3326
 
