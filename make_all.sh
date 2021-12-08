@@ -4,12 +4,12 @@
 source ./gh_token
 
 # Custom kernels based on current date
-KERNEL_VERSION="5.16-rc3"
+KERNEL_VERSION="5.16-rc4"
 make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.15.6"
+KERNEL_VERSION="5.15.7"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -50,7 +50,7 @@ make kernel-x86_64-build
 TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry Pi kernels
-KERNEL_VERSION="5.15.5"
+KERNEL_VERSION="5.15.6"
 make kernel-rpi1-build
 TARGET=rpi1 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rpi2-build
