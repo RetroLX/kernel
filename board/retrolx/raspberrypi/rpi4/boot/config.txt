@@ -6,7 +6,7 @@
 arm_64bit=1
 
 # sets the initial CEC name of the device
-cec_osd_name=batocera
+cec_osd_name=retrolx
 
 # uncomment will lead to "safe mode" settings being used to try to boot with maximum HDMI compatibility.
 #hdmi_safe=1
@@ -128,19 +128,21 @@ initramfs boot/initrd.gz
 
 # Configure GPU memory based on SDRAM size
 # https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
-gpu_mem_512=128
 gpu_mem_1024=384
 
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
-[rpi3]
+[rpi4]
 # Enable DRM VC4 V3D driver on top of the dispmanx display stack
 # Preferred 'Full' Kernel Mode Setting (KMS)
-#dtoverlay=vc4-kms-v3d,noaudio
+dtoverlay=vc4-kms-v3d-pi4,noaudio
 
 # Optional 'Fake' KMS for displays that won't work with 'Full' KMS
-dtoverlay=vc4-fkms-v3d
+#dtoverlay=vc4-fkms-v3d
+
+# Ensure only one display output can be used on the Pi4 with retrolx
+max_framebuffers=1
 
 [DPI]
 # Put any DPI required display code here

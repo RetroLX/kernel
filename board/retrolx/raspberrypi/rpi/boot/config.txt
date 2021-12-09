@@ -3,7 +3,7 @@
 # Some settings may impact device functionality. See link above for details
 
 # sets the initial CEC name of the device
-cec_osd_name=batocera
+cec_osd_name=retrolx
 
 # uncomment if you get no picture on HDMI for a default "safe" mode
 #hdmi_safe=1
