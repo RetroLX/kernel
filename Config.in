@@ -3,13 +3,13 @@ menu "RetroLX.kernel"
 menu "System"
 
   menu "Gpu"
-    source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/gpu/mali-midgard-module/Config.in"
-    source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/gpu/retrolx-nvidia-kernel-module/Config.in"
+    source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/gpu/mali-midgard-module/Config.in"
+    source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/gpu/retrolx-nvidia-kernel-module/Config.in"
   endmenu
 
   menu "Network"
-    source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/rtl8192eu/Config.in"
-    source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/network/esp8089/Config.in"
+    source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/network/rtl8192eu/Config.in"
+    source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/network/esp8089/Config.in"
   endmenu
 
   menu "Device trees"
@@ -17,9 +17,9 @@ menu "System"
 endmenu
 
 menu "Controllers"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/db9_gpio_rpi/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/gamecon_gpio_rpi/Config.in"
-  source "$BR2_EXTERNAL_BATOCERA_PATH/package/retrolx/controllers/mk_arcade_joystick_rpi/Config.in"
+  source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/db9_gpio_rpi/Config.in"
+  source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/gamecon_gpio_rpi/Config.in"
+  source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/mk_arcade_joystick_rpi/Config.in"
 endmenu
 
 endmenu
