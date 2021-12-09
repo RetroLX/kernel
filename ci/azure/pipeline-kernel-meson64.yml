@@ -6,7 +6,7 @@
 
 variables:
 - name: version
-  value: 5.15.6
+  value: 5.15.7
 - name: arch
   value: meson64
 
