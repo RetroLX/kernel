@@ -33,6 +33,8 @@ jobs:
   - script: make kernel-${{ variables.arch }}-build
   - script: mkdir publish
   - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
+  - script: make kernel-${{ variables.arch }}-legal
+  - script: tar -czvf publish/kernel-${{ variables.arch }}-${{ variables.version }}-sources.tar.gz output/kernel-${{ variables.arch }}/legal-info
   - task: CopyFilesOverSSH@0
     inputs:
       sshEndpoint: repository.retrolx.org
@@ -42,13 +44,3 @@ jobs:
       cleanTargetFolder: true
       overwrite: true
       failOnEmptySource: true
-  # - task: UniversalPackages@0
-  #   displayName: Universal Publish
-  #   inputs:
-  #     command: publish
-  #     publishDirectory: 'publish'
-  #     vstsFeedPublish: 'RetroLX kernels/Kernels'
-  #     vstsFeedPackagePublish: 'kernel-${{ variables.arch }}'
-  #     versionOption: custom
-  #     versionPublish: '${{ variables.version }}-$(Build.BuildNumber)'
-  #     packagePublishDescription: 'Kernel for ${{ variables.arch }} with version ${{ variables.version }}'
