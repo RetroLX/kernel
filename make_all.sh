@@ -4,12 +4,12 @@
 source ./gh_token
 
 # Custom kernels based on current date
-KERNEL_VERSION="5.16-rc4"
+KERNEL_VERSION="5.16-rc5"
 make kernel-rk356x-build
 TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.15.7"
+KERNEL_VERSION="5.15.8"
 
 # Allwinner kernels
 make kernel-aw32-build

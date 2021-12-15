@@ -6,7 +6,7 @@
 
 variables:
 - name: version
-  value: 5.15.7
+  value: 5.15.8
 - name: arch
   value: x86_64
 
