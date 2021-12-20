@@ -1,40 +1,11 @@
---- a/drivers/gpu/drm/panel/Kconfig	2021-12-20 16:47:34.030941792 +0100
-+++ b/drivers/gpu/drm/panel/Kconfig	2021-12-20 16:50:59.647683374 +0100
-@@ -17,6 +17,15 @@
- 	  Y030XX067A 320x480 3.0" panel as found in the YLM RG-280M, RG-300
- 	  and RG-99 handheld gaming consoles.
- 
-+config DRM_PANEL_ANBERNIC_RG552
-+	tristate "Anbernic RG552 MIPSI/DSI panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the panel built
-+	  in the Anbernic RG552.
-+
- config DRM_PANEL_ARM_VERSATILE
- 	tristate "ARM Versatile panel driver"
- 	depends on OF
---- a/drivers/gpu/drm/panel/Makefile	2021-12-20 16:47:34.002979990 +0100
-+++ b/drivers/gpu/drm/panel/Makefile	2021-12-20 16:51:27.677556146 +0100
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_DRM_PANEL_ABT_Y030XX067A) += panel-abt-y030xx067a.o
-+obj-$(CONFIG_DRM_PANEL_ANBERNIC_RG552) += panel-anbernic-rg552.o
- obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
- obj-$(CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596) += panel-asus-z00t-tm5p5-n35596.o
- obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
---- /dev/null	2021-10-13 09:17:59.771999969 +0200
-+++ b/drivers/gpu/drm/panel/panel-anbernic-rg552.c	2021-10-14 08:06:54.260725200 +0200
-@@ -0,0 +1,719 @@
+--- /dev/null	2021-12-20 16:46:39.935216474 +0100
++++ b/drivers/gpu/drm/panel/panel-anbernic-rg552.c	2021-12-20 17:37:41.146616400 +0100
+@@ -0,0 +1,522 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * NevVision NV3052C IPS LCD panel driver
++ * Anbernic RG552 display panel driver
 + *
-+ * Copyright (C) 2020, Paul Cercueil <paul@crapouillou.net>
 + * Copyright (C) 2021, Romain Tisserand <romain.tisserand@gmail.com>
-+ * Copyright (C) 2021, Tony Jih
 + */
 +
 +#include <linux/delay.h>
@@ -51,24 +22,24 @@
 +
 +#include <video/mipi_display.h>
 +
-+struct nv3052c_panel_info {
++struct panel_rg552_panel_info {
 +	const struct drm_display_mode *display_modes;
 +	unsigned int num_modes;
 +	u32 bus_format, bus_flags;
 +};
 +
-+struct nv3052c {
++struct panel_rg552 {
 +	struct drm_panel panel;
 +	struct mipi_dsi_device *dsi;
 +
 +	struct regulator *supply;
-+	const struct nv3052c_panel_info *panel_info;
++	const struct panel_rg552_panel_info *panel_info;
 +
 +	struct gpio_desc *reset_gpio;
 +	enum drm_panel_orientation orientation;
 +};
 +
-+static const u8 nv3052c_init_sequence_rg351v[][2] = {
++static const u8 panel_rg552_init_sequence_rg351v[][2] = {
 +	{ 0xFF, 0x30 },
 +	{ 0xFF, 0x52 },
 +	{ 0xFF, 0x01 },
@@ -255,203 +226,15 @@
 +	{ 0x3A, 0x70 }
 +};
 +
-+#if 0
-+static const u8 nv3052c_init_sequence_rg351mp[][2] = {
-+	{ 0xFF, 0x30 },
-+	{ 0xFF, 0x52 },
-+	{ 0xFF, 0x01 },
-+	{ 0xE3, 0x00 },
-+	{ 0x40, 0x0A },
-+	{ 0x03, 0x40 },
-+	{ 0x04, 0x00 },
-+	{ 0x05, 0x03 },
-+	{ 0x24, 0x12 },
-+	{ 0x25, 0x1E },
-+	{ 0x26, 0x28 },
-+	{ 0x27, 0x52 },
-+	{ 0x28, 0x57 },
-+	{ 0x29, 0x01 },
-+	{ 0x2A, 0xDF },
-+	{ 0x38, 0x9C },
-+	{ 0x39, 0xA7 },
-+	{ 0x3A, 0x53 },
-+	{ 0x44, 0x00 },
-+	{ 0x49, 0x3C },
-+	{ 0x59, 0xFE },
-+	{ 0x5C, 0x00 },
-+	{ 0x91, 0x77 },
-+	{ 0x92, 0x77 },
-+	{ 0xA0, 0x55 },
-+	{ 0xA1, 0x50 },
-+	{ 0xA4, 0x9C },
-+	{ 0xA7, 0x02 },
-+	{ 0xA8, 0x01 },
-+	{ 0xA9, 0x01 },
-+	{ 0xAA, 0xFC },
-+	{ 0xAB, 0x28 },
-+	{ 0xAC, 0x06 },
-+	{ 0xAD, 0x06 },
-+	{ 0xAE, 0x06 },
-+	{ 0xAF, 0x03 },
-+	{ 0xB0, 0x08 },
-+	{ 0xB1, 0x26 },
-+	{ 0xB2, 0x28 },
-+	{ 0xB3, 0x28 },
-+	{ 0xB4, 0x33 },
-+	{ 0xB5, 0x08 },
-+	{ 0xB6, 0x26 },
-+	{ 0xB7, 0x08 },
-+	{ 0xB8, 0x26 },
-+	{ 0xFF, 0x30 },
-+	{ 0xFF, 0x52 },
-+	{ 0xFF, 0x02 },
-+	{ 0xB0, 0x0B },
-+	{ 0xB1, 0x16 },
-+	{ 0xB2, 0x17 },
-+	{ 0xB3, 0x2C },
-+	{ 0xB4, 0x32 },
-+	{ 0xB5, 0x3B },
-+	{ 0xB6, 0x29 },
-+	{ 0xB7, 0x40 },
-+	{ 0xB8, 0x0D },
-+	{ 0xB9, 0x05 },
-+	{ 0xBA, 0x12 },
-+	{ 0xBB, 0x10 },
-+	{ 0xBC, 0x12 },
-+	{ 0xBD, 0x15 },
-+	{ 0xBE, 0x19 },
-+	{ 0xBF, 0x0E },
-+	{ 0xC0, 0x16 },
-+	{ 0xC1, 0x0A },
-+	{ 0xD0, 0x0C },
-+	{ 0xD1, 0x17 },
-+	{ 0xD2, 0x14 },
-+	{ 0xD3, 0x2E },
-+	{ 0xD4, 0x32 },
-+	{ 0xD5, 0x3C },
-+	{ 0xD6, 0x22 },
-+	{ 0xD7, 0x3D },
-+	{ 0xD8, 0x0D },
-+	{ 0xD9, 0x07 },
-+	{ 0xDA, 0x13 },
-+	{ 0xDB, 0x13 },
-+	{ 0xDC, 0x11 },
-+	{ 0xDD, 0x15 },
-+	{ 0xDE, 0x19 },
-+	{ 0xDF, 0x10 },
-+	{ 0xE0, 0x17 },
-+	{ 0xE1, 0x0A },
-+	{ 0xFF, 0x30 },
-+	{ 0xFF, 0x52 },
-+	{ 0xFF, 0x03 },
-+	{ 0x00, 0x2A },
-+	{ 0x01, 0x2A },
-+	{ 0x02, 0x2A },
-+	{ 0x03, 0x2A },
-+	{ 0x04, 0x61 },
-+	{ 0x05, 0x80 },
-+	{ 0x06, 0xC7 },
-+	{ 0x07, 0x01 },
-+	{ 0x08, 0x82 },
-+	{ 0x09, 0x83 },
-+	{ 0x30, 0x2A },
-+	{ 0x31, 0x2A },
-+	{ 0x32, 0x2A },
-+	{ 0x33, 0x2A },
-+	{ 0x34, 0x61 },
-+	{ 0x35, 0xC5 },
-+	{ 0x36, 0x80 },
-+	{ 0x37, 0x23 },
-+	{ 0x40, 0x82 },
-+	{ 0x41, 0x83 },
-+	{ 0x42, 0x80 },
-+	{ 0x43, 0x81 },
-+	{ 0x44, 0x11 },
-+	{ 0x45, 0xE6 },
-+	{ 0x46, 0xE5 },
-+	{ 0x47, 0x11 },
-+	{ 0x48, 0xE8 },
-+	{ 0x49, 0xE7 },
-+	{ 0x50, 0x02 },
-+	{ 0x51, 0x01 },
-+	{ 0x52, 0x04 },
-+	{ 0x53, 0x03 },
-+	{ 0x54, 0x11 },
-+	{ 0x55, 0xEA },
-+	{ 0x56, 0xE9 },
-+	{ 0x57, 0x11 },
-+	{ 0x58, 0xEC },
-+	{ 0x59, 0xEB },
-+	{ 0x7E, 0x02 },
-+	{ 0x7F, 0x80 },
-+	{ 0xE0, 0x5A },
-+	{ 0xB1, 0x00 },
-+	{ 0xB4, 0x0E },
-+	{ 0xB5, 0x0F },
-+	{ 0xB6, 0x04 },
-+	{ 0xB7, 0x07 },
-+	{ 0xB8, 0x06 },
-+	{ 0xB9, 0x05 },
-+	{ 0xBA, 0x0F },
-+	{ 0xC7, 0x00 },
-+	{ 0xCA, 0x0E },
-+	{ 0xCB, 0x0F },
-+	{ 0xCC, 0x04 },
-+	{ 0xCD, 0x07 },
-+	{ 0xCE, 0x06 },
-+	{ 0xCF, 0x05 },
-+	{ 0xD0, 0x0F },
-+	{ 0x81, 0x0F },
-+	{ 0x84, 0x0E },
-+	{ 0x85, 0x0F },
-+	{ 0x86, 0x07 },
-+	{ 0x87, 0x04 },
-+	{ 0x88, 0x05 },
-+	{ 0x89, 0x06 },
-+	{ 0x8A, 0x00 },
-+	{ 0x97, 0x0F },
-+	{ 0x9A, 0x0E },
-+	{ 0x9B, 0x0F },
-+	{ 0x9C, 0x07 },
-+	{ 0x9D, 0x04 },
-+	{ 0x9E, 0x05 },
-+	{ 0x9F, 0x06 },
-+	{ 0xA0, 0x00 },
-+	{ 0xFF, 0x30 },
-+	{ 0xFF, 0x52 },
-+	{ 0xFF, 0x02 },
-+	{ 0x01, 0x01 },
-+	{ 0x02, 0xDA },
-+	{ 0x03, 0xBA },
-+	{ 0x04, 0xA8 },
-+	{ 0x05, 0x9A },
-+	{ 0x06, 0x70 },
-+	{ 0x07, 0xFF },
-+	{ 0x08, 0x91 },
-+	{ 0x09, 0x90 },
-+	{ 0x0A, 0xFF },
-+	{ 0x0B, 0x8F },
-+	{ 0x0C, 0x60 },
-+	{ 0x0D, 0x58 },
-+	{ 0x0E, 0x48 },
-+	{ 0x0F, 0x38 },
-+	{ 0x10, 0x2B },
-+	{ 0xFF, 0x30 },
-+	{ 0xFF, 0x52 },
-+	{ 0xFF, 0x00 },
-+	{ 0x36, 0x02 },
-+	{ 0x3A, 0x70 }
-+};
-+#endif
 +
-+static inline struct nv3052c *to_nv3052c(struct drm_panel *panel)
++static inline struct panel_rg552 *to_panel_rg552(struct drm_panel *panel)
 +{
-+	return container_of(panel, struct nv3052c, panel);
++	return container_of(panel, struct panel_rg552, panel);
 +}
 +
-+static int nv3052c_prepare(struct drm_panel *panel)
++static int panel_rg552_prepare(struct drm_panel *panel)
 +{
-+	struct nv3052c *priv = to_nv3052c(panel);
++	struct panel_rg552 *priv = to_panel_rg552(panel);
 +	unsigned int i;
 +	int err;
 +
@@ -476,8 +259,8 @@
 +
 +	msleep(100);
 +
-+	for (i = 0; i < ARRAY_SIZE(nv3052c_init_sequence_rg351v); i++) {
-+		err = mipi_dsi_dcs_write_buffer(priv->dsi, nv3052c_init_sequence_rg351v[i], 2);
++	for (i = 0; i < ARRAY_SIZE(panel_rg552_init_sequence_rg351v); i++) {
++		err = mipi_dsi_dcs_write_buffer(priv->dsi, panel_rg552_init_sequence_rg351v[i], 2);
 +		if (err < 0) {
 +			dev_err(panel->dev, "Unable to write init sequence %d: %d\n", i, err);
 +			goto err_disable_regulator;
@@ -506,9 +289,9 @@
 +	return err;
 +}
 +
-+static int nv3052c_unprepare(struct drm_panel *panel)
++static int panel_rg552_unprepare(struct drm_panel *panel)
 +{
-+	struct nv3052c *priv = to_nv3052c(panel);
++	struct panel_rg552 *priv = to_panel_rg552(panel);
 +	int err;
 +
 +	// DISPLAY OFF dsi_generic_write_seq(priv->dsi, 0x05, 0x14, 0x01, 0x28);
@@ -527,9 +310,9 @@
 +	return 0;
 +}
 +
-+static int nv3052c_enable(struct drm_panel *panel)
++static int panel_rg552_enable(struct drm_panel *panel)
 +{
-+	struct nv3052c *priv = to_nv3052c(panel);
++	struct panel_rg552 *priv = to_panel_rg552(panel);
 +	int err;
 +
 +	err = mipi_dsi_dcs_set_display_on(priv->dsi);
@@ -546,9 +329,9 @@
 +	return 0;
 +}
 +
-+static int nv3052c_disable(struct drm_panel *panel)
++static int panel_rg552_disable(struct drm_panel *panel)
 +{
-+	struct nv3052c *priv = to_nv3052c(panel);
++	struct panel_rg552 *priv = to_panel_rg552(panel);
 +	int err;
 +
 +	err = mipi_dsi_dcs_set_display_off(priv->dsi);
@@ -560,11 +343,11 @@
 +	return 0;
 +}
 +
-+static int nv3052c_get_modes(struct drm_panel *panel,
++static int panel_rg552_get_modes(struct drm_panel *panel,
 +			     struct drm_connector *connector)
 +{
-+	struct nv3052c *priv = to_nv3052c(panel);
-+	const struct nv3052c_panel_info *panel_info = priv->panel_info;
++	struct panel_rg552 *priv = to_panel_rg552(panel);
++	const struct panel_rg552_panel_info *panel_info = priv->panel_info;
 +	struct drm_display_mode *mode;
 +	unsigned int i;
 +
@@ -595,18 +378,18 @@
 +	return panel_info->num_modes;
 +}
 +
-+static const struct drm_panel_funcs nv3052c_funcs = {
-+	.prepare	= nv3052c_prepare,
-+	.unprepare	= nv3052c_unprepare,
-+	.enable		= nv3052c_enable,
-+	.disable	= nv3052c_disable,
-+	.get_modes	= nv3052c_get_modes,
++static const struct drm_panel_funcs panel_rg552_funcs = {
++	.prepare	= panel_rg552_prepare,
++	.unprepare	= panel_rg552_unprepare,
++	.enable		= panel_rg552_enable,
++	.disable	= panel_rg552_disable,
++	.get_modes	= panel_rg552_get_modes,
 +};
 +
-+static int nv3052c_probe(struct mipi_dsi_device *dsi)
++static int panel_rg552_probe(struct mipi_dsi_device *dsi)
 +{
 +	struct device *dev = &dsi->dev;
-+	struct nv3052c *priv;
++	struct panel_rg552 *priv;
 +	int err;
 +
 +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
@@ -643,7 +426,7 @@
 +			  MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_VIDEO_SYNC_PULSE /*| MIPI_DSI_MODE_EOT_PACKET*/ |
 +			  MIPI_DSI_CLOCK_NON_CONTINUOUS;
 +
-+	drm_panel_init(&priv->panel, dev, &nv3052c_funcs,
++	drm_panel_init(&priv->panel, dev, &panel_rg552_funcs,
 +		       DRM_MODE_CONNECTOR_DSI);
 +
 +	err = drm_panel_of_backlight(&priv->panel);
@@ -668,17 +451,12 @@
 +		return err;
 +	}
 +
-+	/*
-+	 * We can't call mipi_dsi_maybe_register_tiny_driver(), since the
-+	 * NV3052C does not support MIPI_DCS_WRITE_MEMORY_START.
-+	 */
-+
 +	return 0;
 +}
 +
-+static int nv3052c_remove(struct mipi_dsi_device *dsi)
++static int panel_rg552_remove(struct mipi_dsi_device *dsi)
 +{
-+	struct nv3052c *priv = mipi_dsi_get_drvdata(dsi);
++	struct panel_rg552 *priv = mipi_dsi_get_drvdata(dsi);
 +
 +	mipi_dsi_detach(dsi);
 +	drm_panel_remove(&priv->panel);
@@ -689,7 +467,7 @@
 +	return 0;
 +}
 +
-+static const struct drm_display_mode ltk035c5444t_modes[] = {
++static const struct drm_display_mode rg552_modes[] = {
 +	{ /* 60 Hz */
 +		.clock = 26400,
 +		.hdisplay = 640,
@@ -720,30 +498,28 @@
 +	},
 +};
 +
-+static const struct nv3052c_panel_info ltk035c5444t_panel_info = {
-+	.display_modes = ltk035c5444t_modes,
-+	.num_modes = ARRAY_SIZE(ltk035c5444t_modes),
++static const struct panel_rg552_panel_info rg552_panel_info = {
++	.display_modes = rg552_modes,
++	.num_modes = ARRAY_SIZE(rg552_modes),
 +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
 +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE,
 +};
 +
-+static const struct of_device_id nv3052c_of_match[] = {
-+	{ .compatible = "leadtek,ltk035c5444t", .data = &ltk035c5444t_panel_info },
++static const struct of_device_id panel_rg552_of_match[] = {
++	{ .compatible = "anbernic,panel_rg552", .data = &rg552_panel_info },
 +	{ /* sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(of, nv3052c_of_match);
++MODULE_DEVICE_TABLE(of, panel_rg552_of_match);
 +
-+static struct mipi_dsi_driver nv3052c_driver = {
++static struct mipi_dsi_driver panel_rg552_driver = {
 +	.driver = {
-+		.name = "nv3052c",
-+		.of_match_table = nv3052c_of_match,
++		.name = "panel_rg552",
++		.of_match_table = panel_rg552_of_match,
 +	},
-+	.probe = nv3052c_probe,
-+	.remove = nv3052c_remove,
++	.probe = panel_rg552_probe,
++	.remove = panel_rg552_remove,
 +};
-+module_mipi_dsi_driver(nv3052c_driver);
++module_mipi_dsi_driver(panel_rg552_driver);
 +
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
 +MODULE_AUTHOR("Romain Tisserand <romain.tisserand@gmail.com>");
-+MODULE_AUTHOR("Tony Jih");
 +MODULE_LICENSE("GPL v2");

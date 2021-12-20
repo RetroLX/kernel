@@ -1,0 +1,27 @@
+--- a/drivers/gpu/drm/panel/Kconfig	2021-12-20 16:47:34.030941792 +0100
++++ b/drivers/gpu/drm/panel/Kconfig	2021-12-20 16:50:59.647683374 +0100
+@@ -17,6 +17,15 @@
+ 	  Y030XX067A 320x480 3.0" panel as found in the YLM RG-280M, RG-300
+ 	  and RG-99 handheld gaming consoles.
+ 
++config DRM_PANEL_ANBERNIC_RG552
++	tristate "Anbernic RG552 MIPSI/DSI panel"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for the panel built
++	  in the Anbernic RG552.
++
+ config DRM_PANEL_ARM_VERSATILE
+ 	tristate "ARM Versatile panel driver"
+ 	depends on OF
+--- a/drivers/gpu/drm/panel/Makefile	2021-12-20 16:47:34.002979990 +0100
++++ b/drivers/gpu/drm/panel/Makefile	2021-12-20 16:51:27.677556146 +0100
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_DRM_PANEL_ABT_Y030XX067A) += panel-abt-y030xx067a.o
++obj-$(CONFIG_DRM_PANEL_ANBERNIC_RG552) += panel-anbernic-rg552.o
+ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
+ obj-$(CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596) += panel-asus-z00t-tm5p5-n35596.o
+ obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
