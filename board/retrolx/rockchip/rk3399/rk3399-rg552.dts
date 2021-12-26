@@ -288,7 +288,14 @@
 		clock-names = "ext_clock";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_enable_h>;
-		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+
+                /*
+                 * On the module itself this is one of these (depending
+                 * on the actual card populated):
+                 * - SDIO_RESET_L_WL_REG_ON
+                 * - PDN (power down when low)
+                 */
+		reset-gpios = <&gpio2 RK_PC1 GPIO_ACTIVE_LOW>;
 	};
 
 	sound {
