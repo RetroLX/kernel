@@ -389,6 +389,7 @@
 		power-supply = <&vcc_lcd>;
 		rotation = <0>;
 
+		/* LCD size */
 		width-mm = <70>;
 		height-mm = <52>;
 
@@ -802,6 +803,7 @@
 			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
+
 	pmic {
 		/* ODROID-GO2 : PMIC_INT(GPIO0.PB2) */
 		pmic_int: pmic_int {

@@ -29,6 +29,177 @@
 		pinctrl-0 = <&pwm0_pin>;
 	};
 
+	joypad {
+		compatible = "gpio-keys-adc";
+		joypad-name = "RG351 Gamepad";
+		joypad-product = <0x1100>;
+		joypad-revision = <0x0100>;
+
+		pwms = <&pwm0 0 200000000 0>;		 
+		pwm-names = "rumble_pwm";
+		pinctrl-names = "default";
+		pinctrl-0 = <&btn_pins>;
+		pinctrl-1 = <&pwm0_pin>;
+		io-channels = <&adcmux 0>, <&adcmux 1>, <&adcmux 2>, <&adcmux 3>;
+
+		axis@0 {
+			reg = <0>;
+			abs-flat = <32>;
+			abs-fuzz = <10>;
+			abs-range = <180 800>;
+			linux,code = <ABS_X>;
+			analog;
+		};
+
+		axis@1 {
+			reg = <1>;
+			abs-flat = <32>;
+			abs-fuzz = <10>;
+			abs-range = <180 800>;
+			linux,code = <ABS_RX>;
+			analog;
+		};
+
+		axis@2 {
+			reg = <2>;
+			abs-flat = <32>;
+			abs-fuss = <10>;
+			abs-range = <180 800>;
+			linux,code = <ABS_Y>;
+			analog;
+		};
+
+		axis@3 {
+			reg = <3>;
+			abs-flat = <32>;
+			abs-fuss = <10>;
+			abs-range = <180 800>;
+			linux,code = <ABS_RY>;
+			analog;
+		};
+
+
+        /*
+         *               *** RG351 Switch layout ***              
+         * |--|------------------------------------------------|--|
+         * |  | L1 L2                                    R2 R1 |  |
+         * |  |------------------------------------------------|  |
+         * |pw|       select                           start   |  |
+         * |  |     sw1      |-------------------|      sw8    |  |
+         * |  |  sw3   sw4   |                   |   sw7   sw5 |  |
+         * |  |     sw2      |    LCD Display    |      sw6    |  |
+         * |  |              |                   |             |  |
+         * |  |              |-------------------|             |  |
+         * |  |                                                |  |
+         * |  |------------------------------------------------|  |
+         * |  |                 SD_INT  SD_EXT                 |  |
+         * |--|------------------------------------------------|--|
+         */
+
+		sw1 {
+			reg = <4>;
+			gpios = <&gpio1 RK_PB4 GPIO_ACTIVE_LOW>;
+			label = "DPAD-UP";
+			linux,code = <BTN_DPAD_UP>; // 0x220
+		};
+		sw2 {
+			reg = <5>;
+			gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_LOW>;
+			label = "DPAD-DOWN";
+			linux,code = <BTN_DPAD_DOWN>; // 0x221
+		};
+		sw3 {
+			reg = <6>;
+			gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_LOW>;
+			label = "DPAD-LEFT";
+			linux,code = <BTN_DPAD_LEFT>; // 0x222
+		};
+		sw4 {
+			reg = <7>;
+			gpios = <&gpio1 RK_PB7 GPIO_ACTIVE_LOW>;
+			label = "DPAD-RIGHT";
+			linux,code = <BTN_DPAD_RIGHT>; // 0x223
+		};
+		sw5 {
+			reg = <8>;
+			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_LOW>;
+			label = "BTN-A";
+			linux,code = <BTN_EAST>; // 0x131
+		};
+		sw6 {
+			reg = <9>;
+			gpios = <&gpio1 RK_PA5 GPIO_ACTIVE_LOW>;
+			label = "BTN-A";
+			linux,code = <BTN_SOUTH>; // 0x130
+		};
+		sw7 {
+			reg = <10>;
+			gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
+			label = "BTN-Y";
+			linux,code = <BTN_WEST>; // 0x134
+		};
+		sw8 {
+			reg = <11>;
+			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
+			label = "BTN-X";
+			linux,code = <BTN_NORTH>; // 0x133
+		};
+		sw9 { // UNUSED
+			reg = <12>;
+			gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+			label = "F3";
+			linux,code = <BTN_THUMBL>; // 0x2c3
+		};
+		sw10 { // UNUSED
+			reg = <13>;
+			gpios = <&gpio2 RK_PA3 GPIO_ACTIVE_LOW>;
+			label = "F4";
+			linux,code = <BTN_THUMBR>; // 0x2c4
+		};
+		sw11 { // UNUSED
+			reg = <14>;
+			gpios = <&gpio2 RK_PA5 GPIO_ACTIVE_LOW>;
+			label = "F6";
+			linux,code = <BTN_TRIGGER_HAPPY6>; // 0x13c
+		};
+		sw12 {
+			reg = <15>;
+			gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_LOW>;
+			label = "TOP-LEFT";
+			linux,code = <BTN_TL>; // 0x02
+		};
+		sw13 {
+			reg = <16>;
+			gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_LOW>;
+			label = "TOP-RIGHT";
+			linux,code = <BTN_TR>; // 0x05
+		};
+		sw14 {
+			reg = <17>;
+			gpios = <&gpio3 RK_PB1 GPIO_ACTIVE_LOW>;
+			label = "SELECT";
+			linux,code = <BTN_SELECT>;
+		};
+		sw15 {
+			reg = <18>;
+			gpios = <&gpio3 RK_PB4 GPIO_ACTIVE_LOW>;
+			label = "F2";
+			linux,code = <BTN_START>;
+		};
+		sw16 {
+			reg = <19>;
+			gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+			label = "TOP-RIGHT2";
+			linux,code = <BTN_TR2>;
+		};
+		sw17 {
+			reg = <20>;
+			gpios = <&gpio3 RK_PB2 GPIO_ACTIVE_LOW>;
+			label = "TOP-LEFT2";
+			linux,code = <BTN_TL2>;
+		};
+	};
+
 	fiq-debugger {
 		compatible = "rockchip,fiq-debugger";
 		rockchip,serial-id = <2>;
@@ -40,6 +211,42 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&uart2m1_xfer>;
 		status = "okay";
+	};
+
+	leds: gpio_leds {
+		compatible = "gpio-leds";
+
+		pinctrl-names = "led_pins";
+		pinctrl-0 = <&led_pins>;
+
+		/* Blue LED : GPIO0_C1 */
+		heartbeat {
+			label = "blue:heartbeat";
+			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "heartbeat";
+		};
+	};
+
+	mux: mux-controller {
+		status = "okay";
+		compatible = "gpio-mux";
+		#mux-control-cells = <0>;
+
+		mux-gpios = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>,
+					<&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
+		mux-en-gpio = <&gpio3 RK_PB5 GPIO_ACTIVE_LOW>;
+	};
+
+	adcmux: adc-mux {
+		status = "okay";
+		compatible = "io-channel-mux";
+		io-channels = <&saradc 1>;
+		io-channel-names = "parent";
+		#io-channel-cells = <1>;
+
+		mux-controls = <&mux>;
+
+		channels = "0", "1", "2", "3";
 	};
 
 	backlight: backlight {
@@ -81,19 +288,6 @@
 		default-brightness-level = <255>;
 	};
 	
-	leds: gpio_leds {
-		compatible = "gpio-leds";
-
-		pinctrl-names = "led_pins";
-		pinctrl-0 = <&led_pins>;
-
-		heartbeat {
-			label = "blue:heartbeat";
-			gpios = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "heartbeat";
-		};
-	};
-
 	rk817-sound {
 		compatible = "simple-audio-card";
 		simple-audio-card,format = "i2s";
@@ -132,6 +326,18 @@
 	cpu-supply = <&vdd_arm>;
 };
 
+&cpu1 {
+	cpu-supply = <&vdd_arm>;
+};
+
+&cpu2 {
+	cpu-supply = <&vdd_arm>;
+};
+
+&cpu3 {
+	cpu-supply = <&vdd_arm>;
+};
+
 &cpu0_opp_table {
 	rockchip,avs = <1>;
 
@@ -155,6 +361,16 @@
 &dsi {
 	status = "okay";
 
+	ports {
+		mipi_out: port@1 {
+			reg = <1>;
+
+			mipi_out_panel: endpoint {
+				remote-endpoint = <&mipi_in_panel>;
+			};
+		};
+	};
+
 	panel@0 {
 		compatible = "elida,kd35t133";
 		reg = <0>;
@@ -168,35 +384,15 @@
 
 		/* Rev 0.2 LCD reset gpio GPIO3.C0 */
 		reset-gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
-
-		prepare-delay-ms = <2>;
-		reset-delay-ms = <1>;
-		init-delay-ms = <20>;
-		enable-delay-ms = <120>;
-		disable-delay-ms = <50>;
-		unprepare-delay-ms = <20>;
+		rotation = <270>;
 
 		/* LCD size */
 		width-mm = <42>;
 		height-mm = <82>;
 
-		display-timings {
-			native-mode = <&timing0>;
-
-			timing0: timing0 {
-				clock-frequency = <17000000>;
-				hactive = <320>;
-				vactive = <480>;
-				hfront-porch = <130>;
-				hsync-len = <4>;
-				hback-porch = <130>;
-				vfront-porch = <2>;
-				vsync-len = <1>;
-				vback-porch = <2>;
-				hsync-active = <0>;
-				vsync-active = <0>;
-				de-active = <0>;
-				pixelclk-active = <0>;
+		port {
+			mipi_in_panel: endpoint {
+				remote-endpoint = <&mipi_out_panel>;
 			};
 		};
 	};
@@ -206,6 +402,9 @@
 	status = "okay";
 };
 
+&dsi_dphy {
+	status = "okay";
+};
 
 
 &emmc {
@@ -540,10 +739,10 @@
 	};
 };
 
-/* EXT Header(P2): 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
+/* EXT Header(P2) : 7(SCL:GPIO0.C2), 8(SDA:GPIO0.C3) */
 &i2c1 {
-	clock-frequency = <400000>;
 	status = "okay";
+	clock-frequency = <400000>;
 };
 
 /* MIPI CSI I2C */
@@ -572,7 +771,7 @@
 	status = "okay";
 };
 
-/* RG351P Motor PWM */
+/* Rumble PWM */
 &pwm0 {
 	status = "okay";
 };
@@ -599,8 +798,8 @@
 	sd-uhs-sdr25;
 	sd-uhs-sdr50;
 	sd-uhs-sdr104;
-	vmmc-supply = <&vcc_sd>;
 	vqmmc-supply = <&vccio_sd>;
+	vmmc-supply = <&vcc_sd>;
 	status = "okay";
 };
 
@@ -657,9 +856,9 @@
 	status = "okay";
 };
 
-/*&rga {
+&rga {
 	status = "okay";
-};*/
+};
 
 &pinctrl {
 
