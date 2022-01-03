@@ -1,0 +1,11 @@
+--- a/kernel/irq/msi.c	2022-01-03 16:48:05.316936621 +0100
++++ b/kernel/irq/msi.c	2022-01-03 16:34:37.219146217 +0100
+@@ -449,7 +306,7 @@
+ 	int ret;
+ 
+ 	ret = ops->msi_check(domain, info, dev);
+-	if (ret == 0)
++	if (ret == 0 && ops->msi_prepare)
+ 		ret = ops->msi_prepare(domain, dev, nvec, arg);
+ 
+ 	return ret;
