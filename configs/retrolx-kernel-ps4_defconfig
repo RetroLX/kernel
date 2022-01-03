@@ -1,5 +1,6 @@
 # Target definition
 BR2_x86_64=y
+BR2_x86_jaguar=y
 
 # Toolchain definition
 BR2_GCC_VERSION_11_X=y
@@ -25,7 +26,11 @@ BR2_LINUX_KERNEL_LATEST_VERSION=y
 BR2_KERNEL_HEADERS_5_15=y
 BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/ps4/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/x86/linux_x86_64-defconfig.config"
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/ps4/linux-ps4_defconfig.config"
+BR2_LINUX_KERNEL_CUSTOM_GIT=y
+BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/codedwrench/ps4-linux"
+BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="266268feaf48c58c50b166051c4bc8954a11282c"
+BR2_KERNEL_HEADERS_5_15=y
 BR2_LINUX_KERNEL_NEEDS_HOST_LIBELF=y
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
 
@@ -38,13 +43,12 @@ BR2_PACKAGE_UTIL_LINUX_LIBMOUNT=y
 BR2_PACKAGE_HOST_SQUASHFS=y
 
 # Out-of-tree kernel modules
-BR2_PACKAGE_RETROLX_NVIDIA_KERNEL_MODULE=y
 BR2_PACKAGE_RTL8192EU=y
 #BR2_PACKAGE_RTL8821AU=y
 #BR2_PACKAGE_RTL8189FS=y
 
 # Disable ccache
-BR2_CCACHE=n
+BR2_CCACHE=y
 
 # This config fragment disables Buildroot options that are turned on by
 # default, in order to arrive at minimal build time.

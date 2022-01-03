@@ -1,0 +1,139 @@
+--- a/arch/x86/include/asm/ps4.h	2022-01-03 16:48:02.788893118 +0100
++++ b/arch/x86/include/asm/ps4.h	2022-01-03 16:34:35.171111762 +0100
+@@ -15,8 +15,17 @@
+ 
+ #define PS4_DEFAULT_TSC_FREQ 1594000000
+ 
+-#define EMC_TIMER_BASE 0xd0281000
+-#define EMC_TIMER_VALUE 0x28
++#define BCPIE_BAR4_ADDR 0xc9000000
++#define EMC_TIMER_BASE (BCPIE_BAR4_ADDR + 0x9000) //BAR4 + 0x9000, seems this is not HPET timer, Baikal WDT
++#define EMC_TIMER_NO(x) 0x10 * x //timer 0 or timer 1
++#define EMC_TIMER_NO_VALUE(x) EMC_TIMER_NO(x) + 0x18 //timer 0 and timer 1
++#define EMC_TIMER_PERIOD  EMC_TIMER_BASE + 0x04 //period0 (DWORD)
++#define EMC_TIMER_PERIOD1  EMC_TIMER_BASE + 0x10 //period1 (DWORD & 0xFFFFFFFE)
++//frequency in Hz = ((unsigned __int64)(period >> 1) + 1000000000000000LL) / period;
++#define EMC_TIMER_VALUE EMC_TIMER_NO_VALUE(0)
++#define EMC_TIMER_ON_OFF EMC_TIMER_NO(0) + 0x10
++#define EMC_TIMER_RESET_VALUE EMC_TIMER_NO(0) + 0x14
++
+ 
+ extern unsigned long ps4_calibrate_tsc(void);
+ 
+@@ -33,12 +42,22 @@
+ extern void apcie_free_irqs(unsigned int virq, unsigned int nr_irqs);
+ 
+ extern int apcie_status(void);
++
+ extern int apcie_icc_cmd(u8 major, u16 minor, const void *data,
+ 			 u16 length, void *reply, u16 reply_length);
+ 
++//Baikal
++extern int bpcie_assign_irqs(struct pci_dev *dev, int nvec);
++extern void bpcie_free_irqs(unsigned int virq, unsigned int nr_irqs);
++
++extern int bpcie_status(void);
++extern int bpcie_icc_cmd(u8 major, u16 minor, const void *data,
++			 u16 length, void *reply, u16 reply_length);
++
+ 
+ #else
+ 
++//Aeolia
+ static inline int apcie_assign_irqs(struct pci_dev *dev, int nvec)
+ {
+ 	return -ENODEV;
+@@ -54,6 +73,26 @@
+ 				u16 length, void *reply, u16 reply_length)
+ {
+ 	return -ENODEV;
++}
++
++//Baikal
++static inline int bpcie_assign_irqs(struct pci_dev *dev, int nvec)
++{
++	return -ENODEV;
++}
++
++static inline void bpcie_free_irqs(unsigned int virq, unsigned int nvec)
++{
++}
++
++static inline int bpcie_status(void)
++{
++	return -ENODEV;
++}
++static inline int bpcie_icc_cmd(u8 major, u16 minor, const void *data,
++				u16 length, void *reply, u16 reply_length)
++{
++	return -ENODEV;
+ }
+ 
+ #endif
+--- a/arch/x86/platform/ps4/calibrate.c	2022-01-03 16:48:02.820893669 +0100
++++ b/arch/x86/platform/ps4/calibrate.c	2022-01-03 16:34:35.199112232 +0100
+@@ -57,12 +57,12 @@
+ 		goto fail;
+ 
+ 	// reset/start the timer
+-	emctimer_write32(0x84, emctimer_read32(0x84) & (~0x01));
++	emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) & 0xFFFFFFC8 | 0x32);
+ 	// udelay is not calibrated yet, so this is likely wildly off, but good
+ 	// enough to work.
+ 	udelay(300);
+-	emctimer_write32(0x00, emctimer_read32(0x00) | 0x01);
+-	emctimer_write32(0x84, emctimer_read32(0x84) | 0x01);
++	emctimer_write32(EMC_TIMER_RESET_VALUE, emctimer_read32(EMC_TIMER_RESET_VALUE) & 0xFFFFFFE0 | 0x10);
++	emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) | 0x33);
+ 
+ 	t1 = emctimer_read();
+ 	tsc1 = tsc2 = rdtsc();
+--- a/arch/x86/platform/ps4/ps4.c	2022-01-03 16:48:02.820893669 +0100
++++ b/arch/x86/platform/ps4/ps4.c	2022-01-03 16:34:35.199112232 +0100
+@@ -13,6 +13,7 @@
+ #include <linux/kernel.h>
+ #include <linux/interrupt.h>
+ #include <linux/scatterlist.h>
++#include <linux/sfi.h>
+ #include <linux/irq.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+@@ -24,15 +25,17 @@
+ #include <asm/io_apic.h>
+ #include <asm/io.h>
+ #include <asm/i8259.h>
++#include <asm/apb_timer.h>
+ #include <asm/reboot.h>
+ #include <asm/msr.h>
+ #include <asm/ps4.h>
+ 
+ static bool is_ps4;
+ bool apcie_initialized;
++bool bpcie_initialized;
+ 
+ /*
+- * The RTC is part of the Aeolia PCI device and will be implemented there as
++ * The RTC is part of the Aeolia/Baikal PCI device and will be implemented there as
+  * an RTC class device; stub these out.
+  */
+ static void dummy_get_wallclock(struct timespec64 *now)
+@@ -52,10 +55,18 @@
+ {
+ 	if (!is_ps4)
+ 		return -ENODEV;
+-	return apcie_initialized;
++	return apcie_initialized || bpcie_initialized;
+ }
+ EXPORT_SYMBOL_GPL(apcie_status);
+ 
++int bpcie_status(void)
++{
++	if (!is_ps4)
++		return -ENODEV;
++	return bpcie_initialized;
++}
++EXPORT_SYMBOL_GPL(bpcie_status);
++
+ void icc_reboot(void);
+ 
+ /*
