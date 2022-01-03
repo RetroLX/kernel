@@ -1,0 +1,568 @@
+Seulement dans ps4-linux-ps4boot/drivers/ps4/: aeolia-baikal.h
+diff -u -r ps4-linux/drivers/ps4/aeolia.h ps4-linux-ps4boot/drivers/ps4/aeolia.h
+--- ps4-linux/drivers/ps4/aeolia.h	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/aeolia.h	2022-01-03 16:34:36.563135181 +0100
+@@ -4,6 +4,9 @@
+ #include <linux/io.h>
+ #include <linux/pci.h>
+ #include <linux/i2c.h>
++#include "aeolia-baikal.h"
++
++#define apcie_dev		abpcie_dev
+ 
+ enum aeolia_func_id {
+ 	AEOLIA_FUNC_ID_ACPI = 0,
+@@ -99,64 +102,6 @@
+ #define APCIE_SPM_ICC_REQUEST		0x0
+ #define APCIE_SPM_ICC_REPLY		0x800
+ 
+-#define ICC_REPLY 0x4000
+-#define ICC_EVENT 0x8000
+-
+-#define ICC_MAGIC 0x42
+-#define ICC_EVENT_MAGIC 0x24
+-
+-struct icc_message_hdr {
+-	u8 magic;// not magic: it's ID of sender. 0x32=EAP,0x42=SoC(x86/fbsd)
+- 	u8 major;// service id (destination)
+- 	u16 minor;// message id (command)
+-	u16 unknown;
+-	u16 cookie; //normally monotonic xfer counter, can be set to special values
+-	u16 length;
+-	u16 checksum;
+-} __packed;
+-
+-#define ICC_HDR_SIZE sizeof(struct icc_message_hdr)
+-#define ICC_MIN_SIZE 0x20
+-#define ICC_MAX_SIZE 0x7f0
+-#define ICC_MIN_PAYLOAD (ICC_MIN_SIZE - ICC_HDR_SIZE)
+-#define ICC_MAX_PAYLOAD (ICC_MAX_SIZE - ICC_HDR_SIZE)
+-
+-struct apcie_icc_dev {
+-	phys_addr_t spm_base;
+-	void __iomem *spm;
+-
+-	spinlock_t reply_lock;
+-	bool reply_pending;
+-
+-	struct icc_message_hdr request;
+-	struct icc_message_hdr reply;
+-	u16 reply_extra_checksum;
+-	void *reply_buffer;
+-	int reply_length;
+-	wait_queue_head_t wq;
+-
+-	struct i2c_adapter i2c;
+-	struct input_dev *pwrbutton_dev;
+-};
+-
+-struct apcie_dev {
+-	struct pci_dev *pdev;
+-	struct irq_domain *irqdomain;
+-	void __iomem *bar0;
+-	void __iomem *bar2;
+-	void __iomem *bar4;
+-
+-	int nvec;
+-	int serial_line[2];
+-	struct apcie_icc_dev icc;
+-};
+-
+-#define sc_err(...) dev_info(&sc->pdev->dev, __VA_ARGS__)
+-#define sc_warn(...) dev_info(&sc->pdev->dev, __VA_ARGS__)
+-#define sc_notice(...) dev_info(&sc->pdev->dev, __VA_ARGS__)
+-#define sc_info(...) dev_info(&sc->pdev->dev, __VA_ARGS__)
+-#define sc_dbg(...) dev_info(&sc->pdev->dev, __VA_ARGS__)
+-
+ static inline int apcie_irqnum(struct apcie_dev *sc, int index)
+ {
+ 	if (sc->nvec > 1) {
+Seulement dans ps4-linux-ps4boot/drivers/ps4/: baikal.h
+diff -u -r ps4-linux/drivers/ps4/icc/i2c.c ps4-linux-ps4boot/drivers/ps4/icc/i2c.c
+--- ps4-linux/drivers/ps4/icc/i2c.c	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/icc/i2c.c	2022-01-03 16:34:36.563135181 +0100
+@@ -4,6 +4,8 @@
+ 
+ #include "../aeolia.h"
+ 
++#define apcie_dev		abpcie_dev
++
+ #define ICC_MAX_READ_DATA 0xff
+ #define ICC_MAX_WRITE_DATA 0xf8
+ 
+diff -u -r ps4-linux/drivers/ps4/Makefile ps4-linux-ps4boot/drivers/ps4/Makefile
+--- ps4-linux/drivers/ps4/Makefile	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/Makefile	2022-01-03 16:34:36.563135181 +0100
+@@ -1,4 +1,4 @@
+-# Aeolia PCI devices
++# Aeolia and Baikal PCI devices
+ # LISTED IN INIT ORDER \o/ ...  ._.
+ # N.B. this driver must be init'd before pretty much everything, but actual dependants are:
+ # drivers/net/ethernet/marvell/sky2 (implements ps4-gbe)
+@@ -6,4 +6,9 @@
+ 	ps4-apcie-uart.o \
+ 	ps4-apcie-icc.o \
+ 	ps4-apcie-pwrbutton.o \
+-	icc/i2c.o \
++	icc/i2c.o
++obj-y += ps4-bpcie.o \
++	ps4-bpcie-uart.o \
++	ps4-bpcie-icc.o \
++	ps4-apcie-pwrbutton.o \
++	icc/i2c.o
+\ Pas de fin de ligne à la fin du fichier
+diff -u -r ps4-linux/drivers/ps4/ps4-apcie.c ps4-linux-ps4boot/drivers/ps4/ps4-apcie.c
+--- ps4-linux/drivers/ps4/ps4-apcie.c	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/ps4-apcie.c	2022-01-03 16:34:36.563135181 +0100
+@@ -8,7 +8,6 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+ #include <linux/msi.h>
+-#include <asm/apic.h>
+ #include <asm/irqdomain.h>
+ #include <asm/irq_remapping.h>
+ 
+@@ -18,11 +17,6 @@
+ 
+ #include "aeolia.h"
+ 
+-
+-#define     MSI_DATA_VECTOR_SHIFT	0
+-#define	    MSI_DATA_VECTOR(v)		(((u8)v) << MSI_DATA_VECTOR_SHIFT)
+-#define     MSI_DATA_VECTOR_MASK	0xffffff00
+-
+ /* #define QEMU_HACK_NO_IOMMU */
+ 
+ /* Number of implemented MSI registers per function */
+@@ -68,20 +62,12 @@
+ 
+ 	glue_clear_mask(sc, APCIE_REG_MSI_CONTROL, APCIE_REG_MSI_CONTROL_ENABLE);
+ 	/* Unknown */
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4, APCIE_REG_MSI(0x8), 0xffffffff);
+ 	glue_write32(sc, APCIE_REG_MSI(0x8), 0xffffffff);
+ 	/* Unknown */
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4, APCIE_REG_MSI(0xc + (func << 2)), 0xB7FFFF00 + func * 16);
+ 	glue_write32(sc, APCIE_REG_MSI(0xc + (func << 2)), 0xB7FFFF00 + func * 16);
+-
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4, APCIE_REG_MSI_ADDR(func), addr);
+ 	glue_write32(sc, APCIE_REG_MSI_ADDR(func), addr);
+ 	/* Unknown */
+-
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4, APCIE_REG_MSI(0xcc + (func << 2)), 0);
+ 	glue_write32(sc, APCIE_REG_MSI(0xcc + (func << 2)), 0);
+-
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4, APCIE_REG_MSI_DATA_HI(func),  data & 0xffe0);
+ 	glue_write32(sc, APCIE_REG_MSI_DATA_HI(func), data & 0xffe0);
+ 
+ 	if (func < 4) {
+@@ -97,8 +83,6 @@
+ 	} else {
+ 		offset = 0xa0 + ((func - 5) << 4) + (subfunc << 2);
+ 	}
+-
+-	sc_dbg("glue_write32 to offset, value (%08x, %08x, %08x)\n", sc->bar4,  APCIE_REG_MSI_DATA_LO(offset), data & 0x1f);
+ 	glue_write32(sc, APCIE_REG_MSI_DATA_LO(offset), data & 0x1f);
+ 
+ 	if (func == AEOLIA_FUNC_ID_PCIE)
+@@ -161,21 +145,6 @@
+ 	}
+ }
+ 
+-static void apcie_irq_msi_compose_msg(struct irq_data *data,
+-				       struct msi_msg *msg)
+-{
+-	struct irq_cfg *cfg = irqd_cfg(data);
+-
+-	memset(msg, 0, sizeof(*msg));
+-	msg->address_hi = X86_MSI_BASE_ADDRESS_HIGH;
+-	msg->address_lo = 0xfee00000;// Just do it like this for now
+-
+-	// I know this is absolute horseshit, but it matches a known working kernel
+-	msg->data = data->irq - 1;
+-
+-	pr_err("apcie_irq_msi_compose_msg\n");
+-}
+-
+ static struct irq_chip apcie_msi_controller = {
+ 	.name = "Aeolia-MSI",
+ 	.irq_unmask = apcie_msi_unmask,
+@@ -183,15 +152,15 @@
+ 	.irq_ack = irq_chip_ack_parent,
+ 	.irq_set_affinity = msi_domain_set_affinity,
+ 	.irq_retrigger = irq_chip_retrigger_hierarchy,
+-	.irq_compose_msi_msg = apcie_irq_msi_compose_msg,
++	.irq_compose_msi_msg = irq_msi_compose_msg,
+ 	.irq_write_msi_msg = apcie_msi_write_msg,
+-	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_AFFINITY_PRE_STARTUP,
++	.flags = IRQCHIP_SKIP_SET_WAKE,
+ };
+ 
+ static irq_hw_number_t apcie_msi_get_hwirq(struct msi_domain_info *info,
+ 					  msi_alloc_info_t *arg)
+ {
+-	return arg->hwirq;
++	return arg->msi_hwirq;
+ }
+ 
+ static int apcie_msi_init(struct irq_domain *domain,
+@@ -199,7 +168,7 @@
+ 			 irq_hw_number_t hwirq, msi_alloc_info_t *arg)
+ {
+ 	struct irq_data *data;
+-	pr_err("apcie_msi_init(%p, %p, %d, 0x%lx, %p)\n", domain, info, virq, hwirq, arg);
++	pr_devel("apcie_msi_init(%p, %p, %d, 0x%lx, %p)\n", domain, info, virq, hwirq, arg);
+ 
+ 	data = irq_domain_get_irq_data(domain, virq);
+ 	irq_domain_set_info(domain, virq, hwirq, info->chip, info->chip_data,
+@@ -211,25 +180,11 @@
+ static void apcie_msi_free(struct irq_domain *domain,
+ 			  struct msi_domain_info *info, unsigned int virq)
+ {
+-	pr_err("apcie_msi_free(%d)\n", virq);
+-}
+-
+-
+-static void apcie_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+-{
+-	arg->desc = desc;
+-	struct pci_dev* device = msi_desc_to_pci_dev(desc);
+-
+-	arg->hwirq = PCI_FUNC(device->devfn) << 8;
+-
+-#ifndef QEMU_HACK_NO_IOMMU
+-	arg->hwirq |= 0xFF;
+-#endif
++	pr_devel("apcie_msi_free(%d)\n", virq);
+ }
+ 
+ static struct msi_domain_ops apcie_msi_domain_ops = {
+ 	.get_hwirq	= apcie_msi_get_hwirq,
+-	.set_desc       = apcie_set_desc,
+ 	.msi_init	= apcie_msi_init,
+ 	.msi_free	= apcie_msi_free,
+ };
+@@ -239,14 +194,12 @@
+ 	.ops		= &apcie_msi_domain_ops,
+ 	.chip		= &apcie_msi_controller,
+ 	.handler	= handle_edge_irq,
+-	.handler_name	= "edge"
+ };
+ 
+-static struct irq_domain *apcie_create_irq_domain(struct apcie_dev *sc)
++struct irq_domain *apcie_create_irq_domain(struct apcie_dev *sc)
+ {
+-	struct irq_domain *domain, *parent;
+-	struct fwnode_handle *fn;
+-	struct irq_fwspec fwspec;
++	struct irq_domain *parent;
++	struct irq_alloc_info info;
+ 
+ 	sc_dbg("apcie_create_irq_domain\n");
+ 	if (x86_vector_domain == NULL)
+@@ -254,37 +207,18 @@
+ 
+ 	apcie_msi_domain_info.chip_data = (void *)sc;
+ 
+-	fn = irq_domain_alloc_named_id_fwnode(apcie_msi_controller.name, pci_dev_id(sc->pdev));
+-	if (!fn) {
+-		return NULL;
+-	}
+-
+-	sc_dbg("devid = %d\n", pci_dev_id(sc->pdev));
+-
+-	fwspec.fwnode = fn;
+-	fwspec.param_count = 1;
+-
+-	// It should be correct to put the pci device id in here
+-	fwspec.param[0] = pci_dev_id(sc->pdev);
+-
+-	parent = irq_find_matching_fwspec(&fwspec, DOMAIN_BUS_ANY);
+-	if (!parent) {
+-		sc_dbg("no parent \n");
++	init_irq_alloc_info(&info, NULL);
++	info.type = X86_IRQ_ALLOC_TYPE_MSI;
++	info.msi_dev = sc->pdev;
++	parent = irq_remapping_get_ir_irq_domain(&info);
++	if (parent == NULL) {
+ 		parent = x86_vector_domain;
+-	} else if (parent == x86_vector_domain) {
+-		sc_dbg("no parent \n");
+ 	} else {
+ 		apcie_msi_domain_info.flags |= MSI_FLAG_MULTI_PCI_MSI;
+ 		apcie_msi_controller.name = "IR-Aeolia-MSI";
+ 	}
+ 
+-	domain = msi_create_irq_domain(fn, &apcie_msi_domain_info, parent);
+-	if (!domain) {
+-		irq_domain_free_fwnode(fn);
+-		pr_warn("Failed to initialize Aeolia-MSI irqdomain.\n");
+-	}
+-
+-	return domain;
++	return msi_create_irq_domain(NULL, &apcie_msi_domain_info, parent);
+ }
+ 
+ static int apcie_is_compatible_device(struct pci_dev *dev)
+@@ -293,12 +227,16 @@
+ 		return 0;
+ 	}
+ 	return (dev->device == PCI_DEVICE_ID_SONY_AEOLIA_PCIE ||
+-		dev->device == PCI_DEVICE_ID_SONY_BELIZE_PCIE ||
+-		dev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE);
++		dev->device == PCI_DEVICE_ID_SONY_BELIZE_PCIE);
+ }
+ 
++/* From arch/x86/platform/ps4/ps4.c */
++extern bool bpcie_initialized;
+ int apcie_assign_irqs(struct pci_dev *dev, int nvec)
+ {
++	if (bpcie_initialized)
++		return bpcie_assign_irqs(dev, nvec);
++
+ 	int ret;
+ 	unsigned int sc_devfn;
+ 	struct pci_dev *sc_dev;
+@@ -321,45 +259,32 @@
+ 	}
+ 
+ 	init_irq_alloc_info(&info, NULL);
+-	info.type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
++	info.type = X86_IRQ_ALLOC_TYPE_MSI;
+ 	/* IRQs "come from" function 4 as far as the IOMMU/system see */
+-	//info.msi_dev = sc->pdev;
+-	info.devid = pci_dev_id(sc->pdev);
+-
+-	int i, base = 0;
+-	struct msi_desc *desc;
+-	struct device* bare_dev = &sc->pdev->dev;
+-
++	info.msi_dev = sc->pdev;
+ 	/* Our hwirq number is function << 8 plus subfunction.
+ 	 * Subfunction is usually 0 and implicitly increments per hwirq,
+ 	 * but can also be 0xff to indicate that this is a shared IRQ. */
+-	info.hwirq = PCI_FUNC(dev->devfn) << 8;
++	info.msi_hwirq = PCI_FUNC(dev->devfn) << 8;
++
++	dev_dbg(&dev->dev, "apcie_assign_irqs(%d)\n", nvec);
+ 
+ #ifndef QEMU_HACK_NO_IOMMU
+ 	info.flags = X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+ 	if (!(apcie_msi_domain_info.flags & MSI_FLAG_MULTI_PCI_MSI)) {
+ 		nvec = 1;
+-		info.hwirq |= 0xff; /* Shared IRQ for all subfunctions */
++		info.msi_hwirq |= 0xff; /* Shared IRQ for all subfunctions */
+ 	}
+ #endif
+ 
+-	desc = alloc_msi_entry(bare_dev, nvec, NULL);
+-
+-	info.desc = desc;
+-	info.data = sc;
+-
+-	dev_info(&dev->dev, "apcie_assign_irqs(%d) (%d)\n", nvec, info.hwirq);
+-
+ 	ret = irq_domain_alloc_irqs(sc->irqdomain, nvec, NUMA_NO_NODE, &info);
+ 	if (ret >= 0) {
+-		dev_info(&dev->dev, "irq_domain_alloc_irqs = %x\n", ret);
+ 		dev->irq = ret;
+-		desc->irq = ret;
+ 		ret = nvec;
+ 	}
+ 
+ fail:
+-	dev_info(&dev->dev, "apcie_assign_irqs returning %d\n", ret);
++	dev_dbg(&dev->dev, "apcie_assign_irqs returning %d\n", ret);
+ 	if (sc_dev)
+ 		pci_dev_put(sc_dev);
+ 	return ret;
+@@ -368,7 +293,10 @@
+ 
+ void apcie_free_irqs(unsigned int virq, unsigned int nr_irqs)
+ {
+-	irq_domain_free_irqs(virq, nr_irqs);
++	if (bpcie_initialized)
++		bpcie_free_irqs(virq, nr_irqs);
++	else
++		irq_domain_free_irqs(virq, nr_irqs);
+ }
+ EXPORT_SYMBOL(apcie_free_irqs);
+ 
+@@ -527,11 +455,10 @@
+ 
+ 	if ((ret = apcie_glue_init(sc)) < 0)
+ 		goto free_bars;
+-	// TODO (ps4patches): figure out why this dies a horrible and painful death.
+-	//if ((ret = apcie_uart_init(sc)) < 0)
+-	//	goto remove_glue;
+-	if ((ret = apcie_icc_init(sc)) < 0)
++	if ((ret = apcie_uart_init(sc)) < 0)
+ 		goto remove_glue;
++	if ((ret = apcie_icc_init(sc)) < 0)
++		goto remove_uart;
+ 
+ 	apcie_initialized = true;
+ 	return 0;
+@@ -596,7 +523,6 @@
+ static const struct pci_device_id apcie_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_AEOLIA_PCIE), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BELIZE_PCIE), },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BAIKAL_PCIE), },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, apcie_pci_tbl);
+diff -u -r ps4-linux/drivers/ps4/ps4-apcie-icc.c ps4-linux-ps4boot/drivers/ps4/ps4-apcie-icc.c
+--- ps4-linux/drivers/ps4/ps4-apcie-icc.c	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/ps4-apcie-icc.c	2022-01-03 16:34:36.563135181 +0100
+@@ -15,40 +15,22 @@
+  * other kernel code in unrelated subsystems to issue icc requests without
+  * having to get a reference to the device. */
+ static struct apcie_dev *icc_sc;
++
+ DEFINE_MUTEX(icc_mutex);
+ 
+ /* The ICC message passing interface seems to be potentially designed to
+  * support multiple outstanding requests at once, but the original PS4 OS never
+  * does this, so we don't either. */
+ 
+-#define BUF_FULL 0x7f0
+-#define BUF_EMPTY 0x7f4
+-#define HDR(x) (offsetof(struct icc_message_hdr, x))
+ #define REQUEST (sc->icc.spm + APCIE_SPM_ICC_REQUEST)
+ #define REPLY (sc->icc.spm + APCIE_SPM_ICC_REPLY)
+ 
+-/* Seconds. Yes, some ICC requests can be slow. */
+-int icc_timeout = 15;
+-
+ int icc_i2c_init(struct apcie_dev *sc);
+ void icc_i2c_remove(struct apcie_dev *sc);
+ int icc_pwrbutton_init(struct apcie_dev *sc);
+ void icc_pwrbutton_remove(struct apcie_dev *sc);
+ void icc_pwrbutton_trigger(struct apcie_dev *sc, int state);
+ 
+-#define ICC_MAJOR	'I'
+-
+- struct icc_cmd {
+- 	u8 major;
+- 	u16 minor;
+- 	void __user *data;
+- 	u16 length;
+- 	void __user *reply;
+- 	u16 reply_length;
+- };
+-
+-#define ICC_IOCTL_CMD _IOWR(ICC_MAJOR, 1, struct icc_cmd)
+-
+ static u16 checksum(const void *p, int length)
+ {
+ 	const u8 *pp = p;
+@@ -242,10 +224,10 @@
+ 
+ 	if (intr)
+ 		ret = wait_event_interruptible_timeout(sc->icc.wq,
+-				!sc->icc.reply_pending, HZ * icc_timeout);
++				!sc->icc.reply_pending, HZ * ICC_TIMEOUT);
+ 	else
+ 		ret = wait_event_timeout(sc->icc.wq,
+-				!sc->icc.reply_pending, HZ * icc_timeout);
++				!sc->icc.reply_pending, HZ * ICC_TIMEOUT);
+ 
+ 	spin_lock_irq(&sc->icc.reply_lock);
+ 	sc->icc.reply_buffer = NULL;
+@@ -280,9 +262,14 @@
+ 	return sc->icc.reply.length - ICC_HDR_SIZE;
+ }
+ 
++/* From arch/x86/platform/ps4/ps4.c */
++extern bool bpcie_initialized;
+ int apcie_icc_cmd(u8 major, u16 minor, const void *data, u16 length,
+ 		   void *reply, u16 reply_length)
+ {
++	if (bpcie_initialized)
++			return bpcie_icc_cmd(major, minor, data, length, reply, reply_length);
++	
+ 	int ret;
+ 
+ 	mutex_lock(&icc_mutex);
+@@ -297,7 +284,7 @@
+ }
+ EXPORT_SYMBOL_GPL(apcie_icc_cmd);
+ 
+-void resetUsbPort(void)
++static void resetUsbPort(void)
+ {
+ 	u8 off = 0, on = 1;
+ 	u8 resp[20];
+@@ -322,7 +309,7 @@
+ 	}
+ }
+ 
+-void resetBtWlan(void)
++static void resetBtWlan(void)
+ {
+ 	u8 off = 2, on = 3;
+ 	u8 resp[20];
+@@ -355,7 +342,7 @@
+ 	}
+ }
+ 
+-void do_icc_init(void) {
++static void do_icc_init(void) {
+ 	u8 svc = 0x10;
+ 	u8 reply[0x30];
+ 	static const u8 led_config[] = {
+diff -u -r ps4-linux/drivers/ps4/ps4-apcie-pwrbutton.c ps4-linux-ps4boot/drivers/ps4/ps4-apcie-pwrbutton.c
+--- ps4-linux/drivers/ps4/ps4-apcie-pwrbutton.c	2022-01-03 16:48:04.576923886 +0100
++++ ps4-linux-ps4boot/drivers/ps4/ps4-apcie-pwrbutton.c	2022-01-03 16:34:36.563135181 +0100
+@@ -1,7 +1,8 @@
+ #include <linux/input.h>
+ #include "aeolia.h"
++#include "baikal.h"
+ 
+-void icc_pwrbutton_trigger(struct apcie_dev *sc, int state)
++void icc_pwrbutton_trigger(struct abpcie_dev *sc, int state)
+ {
+ 	if (sc->icc.pwrbutton_dev) {
+ 		input_report_key(sc->icc.pwrbutton_dev, KEY_POWER, state ? 1 : 0);
+@@ -9,7 +10,7 @@
+ 	}
+ }
+ 
+-int icc_pwrbutton_init(struct apcie_dev *sc)
++int icc_pwrbutton_init(struct abpcie_dev *sc)
+ {
+ 	int ret = 0;
+ 	u16 button;
+@@ -44,7 +45,9 @@
+ 
+ 	// enable power button notifications
+ 	button = 0x100;
+-	ret = apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
++	ret = bpcie_is_compatible_device(sc->pdev) ?
++			bpcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0) :
++			apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
+ 	if (ret < 0) {
+ 		sc_info("%s: Failed to enable power notifications (%d)\n",
+ 			__func__, ret);
+@@ -52,7 +55,9 @@
+ 
+ 	// enable reset button notifications (?)
+ 	button = 0x102;
+-	ret = apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
++	ret = bpcie_is_compatible_device(sc->pdev) ?
++			bpcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0) :
++			apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
+ 	if (ret < 0) {
+ 		sc_info("%s: Failed to enable reset notifications (%d)\n",
+ 		        __func__, ret);
+@@ -61,7 +66,7 @@
+ 	return 0;
+ }
+ 
+-void icc_pwrbutton_remove(struct apcie_dev *sc)
++void icc_pwrbutton_remove(struct abpcie_dev *sc)
+ {
+ 	if (sc->icc.pwrbutton_dev)
+ 		input_free_device(sc->icc.pwrbutton_dev);
+Seulement dans ps4-linux-ps4boot/drivers/ps4/: ps4-bpcie.c
+Seulement dans ps4-linux-ps4boot/drivers/ps4/: ps4-bpcie-icc.c
+Seulement dans ps4-linux-ps4boot/drivers/ps4/: ps4-bpcie-uart.c
