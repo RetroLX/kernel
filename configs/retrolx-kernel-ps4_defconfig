@@ -1,5 +1,6 @@
 # Target definition
 BR2_x86_64=y
+BR2_x86_jaguar=y
 
 # Toolchain definition
 BR2_GCC_VERSION_11_X=y
