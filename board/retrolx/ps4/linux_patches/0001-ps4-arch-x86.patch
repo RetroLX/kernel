@@ -90,14 +90,6 @@
  	tsc1 = tsc2 = rdtsc();
 --- a/arch/x86/platform/ps4/ps4.c	2022-01-03 16:48:02.820893669 +0100
 +++ b/arch/x86/platform/ps4/ps4.c	2022-01-03 16:34:35.199112232 +0100
-@@ -13,6 +13,7 @@
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/scatterlist.h>
-+#include <linux/sfi.h>
- #include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
 @@ -24,15 +25,17 @@
  #include <asm/io_apic.h>
  #include <asm/io.h>

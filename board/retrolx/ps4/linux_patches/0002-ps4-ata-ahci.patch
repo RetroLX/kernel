@@ -25,24 +25,6 @@
  	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
  	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
  	struct reset_control	*rsts;		/* Optional */
-@@ -384,15 +381,12 @@
-  * for ATA_BASE_SHT
-  */
- #define AHCI_SHT(drv_name)						\
--	__ATA_BASE_SHT(drv_name),					\
-+	ATA_NCQ_SHT(drv_name),						\
- 	.can_queue		= AHCI_MAX_CMDS,			\
- 	.sg_tablesize		= AHCI_MAX_SG,				\
- 	.dma_boundary		= AHCI_DMA_BOUNDARY,			\
- 	.shost_attrs		= ahci_shost_attrs,			\
--	.sdev_attrs		= ahci_sdev_attrs,			\
--	.change_queue_depth     = ata_scsi_change_queue_depth,		\
--	.tag_alloc_policy       = BLK_TAG_ALLOC_RR,             	\
--	.slave_configure        = ata_scsi_slave_config
-+	.sdev_attrs		= ahci_sdev_attrs
- 
- extern struct ata_port_operations ahci_ops;
- extern struct ata_port_operations ahci_platform_ops;
 @@ -447,32 +441,79 @@
  	return (cap & 0x1f) + 1;
  }
@@ -161,123 +143,6 @@
  };
  
  enum board_ids {
-@@ -61,7 +61,6 @@
- 	board_ahci_yes_fbs,
- 
- 	/* board IDs for specific chipsets in alphabetical order */
--	board_ahci_al,
- 	board_ahci_avn,
- 	board_ahci_mcp65,
- 	board_ahci_mcp77,
-@@ -86,7 +85,6 @@
- 
- static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
- static void ahci_remove_one(struct pci_dev *dev);
--static void ahci_shutdown_one(struct pci_dev *dev);
- static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
- 				 unsigned long deadline);
- static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
-@@ -174,13 +172,6 @@
- 		.port_ops	= &ahci_ops,
- 	},
- 	/* by chipsets */
--	[board_ahci_al] = {
--		AHCI_HFLAGS	(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_MSI),
--		.flags		= AHCI_FLAG_COMMON,
--		.pio_mask	= ATA_PIO4,
--		.udma_mask	= ATA_UDMA6,
--		.port_ops	= &ahci_ops,
--	},
- 	[board_ahci_avn] = {
- 		.flags		= AHCI_FLAG_COMMON,
- 		.pio_mask	= ATA_PIO4,
-@@ -250,7 +241,6 @@
- 
- static const struct pci_device_id ahci_pci_tbl[] = {
- 	/* Intel */
--	{ PCI_VDEVICE(INTEL, 0x06d6), board_ahci }, /* Comet Lake PCH-H RAID */
- 	{ PCI_VDEVICE(INTEL, 0x2652), board_ahci }, /* ICH6 */
- 	{ PCI_VDEVICE(INTEL, 0x2653), board_ahci }, /* ICH6M */
- 	{ PCI_VDEVICE(INTEL, 0x27c1), board_ahci }, /* ICH7 */
-@@ -364,10 +354,6 @@
- 	{ PCI_VDEVICE(INTEL, 0x1f3f), board_ahci_avn }, /* Avoton RAID */
- 	{ PCI_VDEVICE(INTEL, 0x2823), board_ahci }, /* Wellsburg RAID */
- 	{ PCI_VDEVICE(INTEL, 0x2827), board_ahci }, /* Wellsburg RAID */
--	{ PCI_VDEVICE(INTEL, 0x43d4), board_ahci }, /* Rocket Lake PCH-H RAID */
--	{ PCI_VDEVICE(INTEL, 0x43d5), board_ahci }, /* Rocket Lake PCH-H RAID */
--	{ PCI_VDEVICE(INTEL, 0x43d6), board_ahci }, /* Rocket Lake PCH-H RAID */
--	{ PCI_VDEVICE(INTEL, 0x43d7), board_ahci }, /* Rocket Lake PCH-H RAID */
- 	{ PCI_VDEVICE(INTEL, 0x8d02), board_ahci }, /* Wellsburg AHCI */
- 	{ PCI_VDEVICE(INTEL, 0x8d04), board_ahci }, /* Wellsburg RAID */
- 	{ PCI_VDEVICE(INTEL, 0x8d06), board_ahci }, /* Wellsburg RAID */
-@@ -411,15 +397,11 @@
- 	{ PCI_VDEVICE(INTEL, 0xa252), board_ahci }, /* Lewisburg RAID*/
- 	{ PCI_VDEVICE(INTEL, 0xa256), board_ahci }, /* Lewisburg RAID*/
- 	{ PCI_VDEVICE(INTEL, 0xa356), board_ahci }, /* Cannon Lake PCH-H RAID */
--	{ PCI_VDEVICE(INTEL, 0x06d7), board_ahci }, /* Comet Lake-H RAID */
--	{ PCI_VDEVICE(INTEL, 0xa386), board_ahci }, /* Comet Lake PCH-V RAID */
- 	{ PCI_VDEVICE(INTEL, 0x0f22), board_ahci_mobile }, /* Bay Trail AHCI */
- 	{ PCI_VDEVICE(INTEL, 0x0f23), board_ahci_mobile }, /* Bay Trail AHCI */
- 	{ PCI_VDEVICE(INTEL, 0x22a3), board_ahci_mobile }, /* Cherry Tr. AHCI */
- 	{ PCI_VDEVICE(INTEL, 0x5ae3), board_ahci_mobile }, /* ApolloLake AHCI */
- 	{ PCI_VDEVICE(INTEL, 0x34d3), board_ahci_mobile }, /* Ice Lake LP AHCI */
--	{ PCI_VDEVICE(INTEL, 0x02d3), board_ahci_mobile }, /* Comet Lake PCH-U AHCI */
--	{ PCI_VDEVICE(INTEL, 0x02d7), board_ahci_mobile }, /* Comet Lake PCH RAID */
- 
- 	/* JMicron 360/1/3/5/6, match class to avoid IDE function */
- 	{ PCI_VENDOR_ID_JMICRON, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-@@ -438,23 +420,13 @@
- 	{ PCI_VDEVICE(ATI, 0x4394), board_ahci_sb700 }, /* ATI SB700/800 */
- 	{ PCI_VDEVICE(ATI, 0x4395), board_ahci_sb700 }, /* ATI SB700/800 */
- 
--	/* Amazon's Annapurna Labs support */
--	{ PCI_DEVICE(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031),
--		.class = PCI_CLASS_STORAGE_SATA_AHCI,
--		.class_mask = 0xffffff,
--		board_ahci_al },
- 	/* AMD */
- 	{ PCI_VDEVICE(AMD, 0x7800), board_ahci }, /* AMD Hudson-2 */
- 	{ PCI_VDEVICE(AMD, 0x7900), board_ahci }, /* AMD CZ */
--	{ PCI_VDEVICE(AMD, 0x7901), board_ahci_mobile }, /* AMD Green Sardine */
- 	/* AMD is using RAID class only for ahci controllers */
- 	{ PCI_VENDOR_ID_AMD, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
- 	  PCI_CLASS_STORAGE_RAID << 8, 0xffffff, board_ahci },
- 
--	/* Dell S140/S150 */
--	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, PCI_SUBVENDOR_ID_DELL, PCI_ANY_ID,
--	  PCI_CLASS_STORAGE_RAID << 8, 0xffffff, board_ahci },
--
- 	/* VIA */
- 	{ PCI_VDEVICE(VIA, 0x3349), board_ahci_vt8251 }, /* VIA VT8251 */
- 	{ PCI_VDEVICE(VIA, 0x6287), board_ahci_vt8251 }, /* VIA VT8251 */
-@@ -613,9 +585,6 @@
- 	{ PCI_VDEVICE(SONY, PCI_DEVICE_ID_SONY_BELIZE_AHCI), board_ahci },
- 	{ PCI_VDEVICE(SONY, PCI_DEVICE_ID_SONY_BAIKAL_AHCI), board_ahci },
- 
--	/* Loongson */
--	{ PCI_VDEVICE(LOONGSON, 0x7a08), board_ahci },
--
- 	/* Generic, PCI class code for AHCI */
- 	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
- 	  PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff, board_ahci },
-@@ -634,7 +603,6 @@
- 	.id_table		= ahci_pci_tbl,
- 	.probe			= ahci_init_one,
- 	.remove			= ahci_remove_one,
--	.shutdown		= ahci_shutdown_one,
- 	.driver = {
- 		.pm		= &ahci_pci_pm_ops,
- 	},
-@@ -825,7 +793,8 @@
- 				(sstatus & 0xf) != 1)
- 			break;
- 
--		ata_link_info(link,  "avn bounce port%d\n", port);
-+		ata_link_printk(link, KERN_INFO, "avn bounce port%d\n",
-+				port);
- 
- 		pci_read_config_word(pdev, 0x92, &val);
- 		val &= ~(1 << port);
 @@ -930,20 +899,15 @@
  
  static int ahci_configure_dma_masks(struct pci_dev *pdev, int using_dac)
@@ -2464,3 +2329,17 @@
  module_pci_driver(ahci_pci_driver);
  
  MODULE_AUTHOR("Jeff Garzik");
+--- a/drivers/ata/ahci.c	2022-01-03 18:26:25.863421341 +0100
++++ b/drivers/ata/ahci.c	2022-01-03 18:30:38.692081633 +0100
+@@ -1949,6 +1949,11 @@
+ 	return 0;
+ }
+ 
++static void ahci_shutdown_one(struct pci_dev *pdev)
++{
++	ata_pci_shutdown_one(pdev);
++}
++
+ static void ahci_remove_one(struct pci_dev *pdev)
+ {
+ 	pm_runtime_get_noresume(&pdev->dev);
