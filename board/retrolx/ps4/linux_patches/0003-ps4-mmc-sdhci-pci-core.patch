@@ -1,0 +1,27 @@
+--- a/drivers/mmc/host/sdhci-pci-core.c	2022-01-03 16:48:04.064915075 +0100
++++ b/drivers/mmc/host/sdhci-pci-core.c	2022-01-03 16:34:36.131127913 +0100
+@@ -338,7 +328,8 @@
+ 
+ static int aeolia_probe_slot(struct sdhci_pci_slot *slot)
+ {
+-	int err = apcie_assign_irqs(slot->chip->pdev, 1);
++	int err = pci_alloc_irq_vectors(slot->chip->pdev, 1, INT_MAX,
++			PCI_IRQ_MSIX | PCI_IRQ_MSI);//apcie_assign_irqs(slot->chip->pdev, 1);
+ 	if (err <= 0) {
+ 		dev_err(&slot->chip->pdev->dev, "failed to get IRQ: %d\n", err);
+ 		return -ENODEV;
+@@ -354,12 +345,14 @@
+ 
+ static int aeolia_enable_dma(struct sdhci_pci_slot *slot)
+ {
++
+ 	if (pci_set_dma_mask(slot->chip->pdev, DMA_BIT_MASK(31))) {
+ 		return -EINVAL;
+ 	}
+ 	if (pci_set_consistent_dma_mask(slot->chip->pdev, DMA_BIT_MASK(31))) {
+ 		return -EINVAL;
+ 	}
++
+ 	return 0;
+ }
+ 
