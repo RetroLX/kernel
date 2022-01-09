@@ -28,8 +28,9 @@
  obj-$(CONFIG_JOYSTICK_GRIP_MP)		+= grip_mp.o
 --- a/dev/null	2022-01-07 20:43:58.847139940 +0100
 +++ b/drivers/input/joystick/gameforce.c	2022-01-08 00:15:35.462105133 +0100
-@@ -0,0 +1,1333 @@
+@@ -0,0 +1,1334 @@
 +/*
++ * SARADC joystick & GPIO Button driver for Chi Gameforce hanheld based on :
 + * SARADC joystick & GPIO Button driver for Linux(Hardkernel ODROIDGO2-Advance)
 + */
 +/*
@@ -76,7 +77,7 @@
 +#include "../input-compat.h"
 +#endif
 +
-+#define DRV_NAME "gameforce"
++#define DRV_NAME "gameforce_gamepad"
 +
 +#ifdef VOLUME_ADC_KEYS
 +struct of_device_id adckeys_of_match[] = {
@@ -1017,6 +1018,8 @@
 +	#endif
 +	input->name = DRV_NAME;
 +	input->phys = DRV_NAME"/input0";
++	input->open = joypad_open;
++	input->close = joypad_close;
 +
 +	input->id.bustype = BUS_HOST;
 +	input->id.vendor  = 0x0003;
@@ -1066,10 +1069,6 @@
 +		return error;
 +#endif	
 +	joypad->dev = dev;
-+
-+        input->name = "gameforce joypad";
-+        input->open = joypad_open;
-+        input->close = joypad_close;
 +
 +	error = input_register_device(input);
 +
@@ -1357,7 +1356,9 @@
 +
 +/*----------------------------------------------------------------------------*/
 +MODULE_AUTHOR("Hardkernel Co.,LTD");
-+MODULE_DESCRIPTION("Keypad driver(ADC&GPIO) for ODROIDGO-Advance");
++MODULE_AUTHOR("Chi Gameforce");
++MODULE_AUTHOR("Romain Tisserand");
++MODULE_DESCRIPTION("Keypad driver(ADC&GPIO) for Chi Gameforce joypad");
 +MODULE_LICENSE("GPL v2");
 +MODULE_ALIAS("platform:" DRV_NAME);
 +
