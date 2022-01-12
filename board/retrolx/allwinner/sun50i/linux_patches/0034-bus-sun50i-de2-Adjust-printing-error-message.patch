@@ -1,7 +1,7 @@
-From 215e40242ae4348b97011b25a7f8f1bb6fb638ba Mon Sep 17 00:00:00 2001
+From aaa92e8740c76273da8ae21ddd213e7fc936cdd9 Mon Sep 17 00:00:00 2001
 From: Jernej Skrabec <jernej.skrabec@gmail.com>
 Date: Sun, 10 Oct 2021 09:11:00 +0200
-Subject: [PATCH] bus: sun50i-de2: Adjust printing error message
+Subject: [PATCH 34/34] bus: sun50i-de2: Adjust printing error message
 
 SRAM driver often returns -EPROBE_DEFER and thus this bus driver often
 prints error message, even if it probes successfully later. This is
@@ -34,5 +34,5 @@ index 672518741f86..414f29cdedf0 100644
  	of_platform_populate(np, NULL, NULL, &pdev->dev);
  
 -- 
-2.33.0
+2.25.1
 
