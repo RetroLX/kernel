@@ -22,7 +22,7 @@ trigger:
 jobs:
 - job: build
   timeoutInMinutes: 360
-  pool:
+  pool: default
     vmImage: ubuntu-20.04
   container:
     image: retrolx/build-environment-ubuntu-20.10:latest
