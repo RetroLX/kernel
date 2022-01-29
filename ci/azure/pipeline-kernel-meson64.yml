@@ -23,6 +23,7 @@ jobs:
 - job: build
   timeoutInMinutes: 360
   pool:
+    name : default
     vmImage: ubuntu-20.04
   container:
     image: retrolx/build-environment-ubuntu-20.10:latest
@@ -31,6 +32,7 @@ jobs:
   - script: printenv
   - script: git submodule init && git submodule update
   - script: make kernel-${{ variables.arch }}-build
+  - script: rm -rf publish
   - script: mkdir publish
   - script: mv output/kernel-${{ variables.arch }}/images/kernel.tar.gz publish/kernel-${{ variables.arch }}-${{ variables.version }}.tar.gz
   - script: make kernel-${{ variables.arch }}-legal
