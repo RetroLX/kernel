@@ -1,4 +1,6 @@
-![RetroLX](retrolx-logo.png)
+<p align="center">
+    <img src="retrolx-logo.png" />
+</p>
 
 # kernel
 
@@ -49,4 +51,4 @@ For every available architecture config file at ``config`` there is an asociated
 
 The current state for the build of every architecture supported by the master branch can be check at [Azure Pipelines](https://dev.azure.com/retrolx/RetroLX%20kernels/_build?view=folders).
 
-The current kernel build of every architecture supported by the master branch can be check at [Retrolx Repository](https://repository.retrolx.org/).
+The current kernel build of every architecture supported by the master branch can be check at [Retrolx Repository](https://repository.retrolx.org/kernel/).

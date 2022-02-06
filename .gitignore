@@ -20,6 +20,7 @@ Thumbs.db
 authorized_keys
 libretro-mame-tiny
 /buildroot-ccache
+/buildroot-dlcache
 /.ba-docker-image-available
 *.code-workspace
 batocera.mk

@@ -6,7 +6,7 @@
 
 variables:
 - name: version
-  value: 5.15.18
+  value: 5.15.18-1
 - name: arch
   value: x86
 
@@ -23,7 +23,7 @@ jobs:
 - job: build
   timeoutInMinutes: 360
   pool:
-    name : default
+#    name : default
     vmImage: ubuntu-20.04
   container:
     image: retrolx/build-environment-ubuntu-20.10:latest
@@ -46,3 +46,5 @@ jobs:
       cleanTargetFolder: true
       overwrite: true
       failOnEmptySource: true
+  - script: rm -rf publish
+  - script: rm -rf output
