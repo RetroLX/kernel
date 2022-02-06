@@ -1,0 +1,11 @@
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts	2022-01-19 22:55:13.016261631 +0100
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts	2022-01-31 18:36:36.195194714 +0100
+@@ -257,7 +257,7 @@
+ };
+ 
+ &usb_otg {
+-	dr_mode = "otg";
++	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
