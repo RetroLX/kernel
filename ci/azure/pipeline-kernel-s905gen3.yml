@@ -6,7 +6,7 @@
 
 variables:
 - name: version
-  value: 5.15.24-1
+  value: 5.15.25-1
 - name: arch
   value: s905gen3
 
