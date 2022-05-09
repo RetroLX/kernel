@@ -4,7 +4,7 @@
 source ./gh_token
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.15.15"
+KERNEL_VERSION="5.15.38"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -43,7 +43,7 @@ make kernel-x86_64-build
 #TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry Pi kernels
-KERNEL_VERSION="5.15.13"
+KERNEL_VERSION="5.15.36"
 make kernel-rpi1-build
 #TARGET=rpi1 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rpi2-build
@@ -54,5 +54,5 @@ make kernel-rpi4-build
 #TARGET=rpi4 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # WIP kernels
-KERNEL_VERSION="5.16.1"
+KERNEL_VERSION="5.17.6"
 make kernel-rk356x-build

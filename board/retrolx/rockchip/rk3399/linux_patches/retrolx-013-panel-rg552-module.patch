@@ -1,6 +1,6 @@
---- /dev/null	2022-01-10 11:55:58.004781700 +0100
-+++ b/drivers/gpu/drm/panel/panel-anbernic-rg552.c	2022-01-10 21:39:18.236813273 +0100
-@@ -0,0 +1,399 @@
+--- /dev/null	2022-01-18 14:40:34.775999939 +0100
++++ b/drivers/gpu/drm/panel/panel-anbernic-rg552.c	2022-01-19 15:39:44.504163018 +0100
+@@ -0,0 +1,431 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Anbernic RG552 display panel driver
@@ -39,8 +39,8 @@
 +	enum drm_panel_orientation orientation;
 +	bool prepared;
 +};
-+
-+
++static u8 ctrl = 0xff; // ???
++static u8 cabc = 0x00; // ???
 +static inline struct panel_rg552 *to_panel_rg552(struct drm_panel *panel)
 +{
 +	return container_of(panel, struct panel_rg552, panel);
@@ -152,6 +152,38 @@
 +		dev_err(ctx->dev, "Failed to set display on: %d\n", err);
 +		goto err_disable_regulator;
 +	}
++
++	msleep(80);
++
++	err = mipi_dsi_dcs_set_display_brightness(ctx->dsi, 0xff);
++ 	if (err < 0) {
++ 		dev_err(ctx->dev, "Failed to set display brightness: %d\n", err);
++		goto err_disable_regulator;
++ 	}
++
++	msleep(80);
++
++	err = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_WRITE_POWER_SAVE, &cabc, sizeof(cabc));
++ 	if (err < 0) {
++ 		dev_err(ctx->dev, "Failed to set CABC off: %d\n", err);
++		goto err_disable_regulator;
++ 	}
++
++	msleep(80);
++
++ 	err = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, &ctrl, sizeof(ctrl));
++	if (err < 0) {
++ 		dev_err(ctx->dev, "Failed to set backlight on off: %d\n", err);
++		goto err_disable_regulator;
++	}
++
++	msleep(80);
++
++	err = mipi_dsi_dcs_set_tear_on(ctx->dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
++	if (err) {
++ 		dev_err(ctx->dev, "Failed to set tear mode: %d\n", err);
++		goto err_disable_regulator;
++ 	}
 +
 +	msleep(80);
 +
