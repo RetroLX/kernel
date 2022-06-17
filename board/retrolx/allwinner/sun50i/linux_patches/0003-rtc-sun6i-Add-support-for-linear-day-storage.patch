@@ -26,7 +26,7 @@ diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
 index adec1b14a8de..0228e9dfd969 100644
 --- a/drivers/rtc/rtc-sun6i.c
 +++ b/drivers/rtc/rtc-sun6i.c
-@@ -133,12 +133,15 @@ struct sun6i_rtc_clk_data {
+@@ -133,12 +133,15 @@
  	unsigned int has_auto_swt : 1;
  };
  
@@ -37,7 +37,7 @@ index adec1b14a8de..0228e9dfd969 100644
  	const struct sun6i_rtc_clk_data *data;
  	void __iomem *base;
  	int irq;
- 	unsigned long alarm;
+ 	time64_t alarm;
 +	unsigned long flags;
  
  	struct clk_hw hw;
