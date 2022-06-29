@@ -52,14 +52,14 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/scripts
 
 # Kernel
 BR2_LINUX_KERNEL=y
-BR2_LINUX_KERNEL_LATEST_LTS_VERSION=y
-BR2_KERNEL_HEADERS_5_15=y
+BR2_LINUX_KERNEL_LATEST_VERSION=y
+BR2_KERNEL_HEADERS_5_18=y
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk3328/linux-rk3328-defconfig.config"
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="rockchip/rk3328-a1 rockchip/rk3328-evb rockchip/rk3328-nanopi-r2s rockchip/rk3328-roc-cc rockchip/rk3328-rock64"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk3328/linux_patches"
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches/common $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches/5.18 $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk3328/linux_patches"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk3328/linux-defconfig-fragment.config"
 
 # Required to build ??

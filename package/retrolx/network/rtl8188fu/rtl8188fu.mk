@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RTL8188FU_VERSION = 359693325b6bdc671e6639b220ba0ac20c320a47
+RTL8188FU_VERSION = dfe0a5090a1ec593ba558b589f092cce29e6256f
 RTL8188FU_SITE = $(call github,kelebek333,rtl8188fu,$(RTL8188FU_VERSION))
 RTL8188FU_LICENSE = GPL-2.0
 

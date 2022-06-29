@@ -4,7 +4,7 @@
 source ./gh_token
 
 # Mainline kernels based on official version
-KERNEL_VERSION="5.15.38"
+KERNEL_VERSION="5.18.6"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -31,16 +31,18 @@ make kernel-rk3328-build
 #TARGET=rk3328 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rk3399-build
 #TARGET=rk3399 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-rk356x-build
+#TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Samsung kernels
 make kernel-exynos5422-build
 #TARGET=exynos5422 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Generic x86/x86_64 kernels
-#make kernel-x86-build
-#TARGET=x86 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-x86_64-build
 #TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-x86-build
+#TARGET=x86 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry Pi kernels
 KERNEL_VERSION="5.15.36"
@@ -52,7 +54,3 @@ make kernel-rpi3-build
 #TARGET=rpi3 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rpi4-build
 #TARGET=rpi4 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
-
-# WIP kernels
-KERNEL_VERSION="5.17.6"
-make kernel-rk356x-build

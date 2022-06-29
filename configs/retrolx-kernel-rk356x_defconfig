@@ -53,14 +53,13 @@ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/scripts
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_LATEST_VERSION=y
-BR2_KERNEL_HEADERS_5_17=y
+BR2_KERNEL_HEADERS_5_18=y
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk356x/linux-rk356x-defconfig.config"
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="rockchip/rk3568-evb1-v10 rockchip/rk3566-quartz64-a"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-#futex patch does not apply BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk356x/linux_patches"
-BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk356x/linux_patches"
+BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches/common $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/linux_patches/5.18 $(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk356x/linux_patches"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_RETROLX_PATH)/board/retrolx/rockchip/rk356x/linux-defconfig-fragment.config"
 
 # Required to build ??
