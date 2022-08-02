@@ -3,8 +3,8 @@
 # Source secret GitHub token
 source ./gh_token
 
-# Mainline kernels based on official version
-KERNEL_VERSION="5.15.55"
+# 5.15 LTS mainline kernel
+KERNEL_VERSION="5.15.58"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -42,6 +42,10 @@ make kernel-exynos5422-build
 make kernel-x86_64-build
 #TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
+# 5.19 kernels
+KERNEL_VERSION="5.19"
+make kernel-rk356x-build
+
 # Raspberry Pi kernels
 KERNEL_VERSION="5.15.36"
 make kernel-rpi1-build
@@ -53,6 +57,3 @@ make kernel-rpi3-build
 make kernel-rpi4-build
 #TARGET=rpi4 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
-# WIP kernels
-KERNEL_VERSION="5.18.12"
-make kernel-rk356x-build
