@@ -45,6 +45,9 @@ make kernel-x86_64-build
 # 5.19 kernels
 KERNEL_VERSION="5.19"
 make kernel-rk356x-build
+#TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
+make kernel-rk3128-build
+#TARGET=rk3128 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # Raspberry Pi kernels
 KERNEL_VERSION="5.15.55"
