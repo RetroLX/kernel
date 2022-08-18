@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ESP8089_VERSION = fef37cfed761803c4462453dba2d2efebbb659b2
+ESP8089_VERSION = f4bbb45a5a4ba0e6bdfdfc9722a02709b62e2df3
 ESP8089_SITE = $(call github,al177,esp8089,$(ESP8089_VERSION))
 ESP8089_LICENSE = GPL-2.0
 ESP8089_LICENSE_FILES = LICENSE
