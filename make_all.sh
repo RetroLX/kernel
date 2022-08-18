@@ -4,7 +4,7 @@
 source ./gh_token
 
 # 5.15 LTS mainline kernel
-KERNEL_VERSION="5.15.58"
+KERNEL_VERSION="5.15.61"
 
 # Allwinner kernels
 make kernel-aw32-build
@@ -43,7 +43,7 @@ make kernel-x86_64-build
 #TARGET=x86_64 VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 
 # 5.19 kernels
-KERNEL_VERSION="5.19"
+KERNEL_VERSION="5.19.1"
 make kernel-rk356x-build
 #TARGET=rk356x VERSION=${KERNEL_VERSION} ./upload_kernel.sh
 make kernel-rk3128-build

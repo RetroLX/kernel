@@ -1,0 +1,4 @@
+#!/bin/bash
+
+killall xone
+nohup /usr/bin/xone >/dev/null 2>/dev/null &

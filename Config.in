@@ -21,6 +21,7 @@ menu "Controllers"
   source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/db9_gpio_rpi/Config.in"
   source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/gamecon_gpio_rpi/Config.in"
   source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/mk_arcade_joystick_rpi/Config.in"
+  source "$BR2_EXTERNAL_RETROLX_PATH/package/retrolx/controllers/xone/Config.in"
 endmenu
 
 endmenu
